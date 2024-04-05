@@ -55,8 +55,8 @@ def main():
 # Login page
 def show_login_page():
     st.title("Login")
-    username = st.text_input("Username", help="the username is CHRMO")
-    password = st.text_input("Password", type="password", help="the password is 1234")
+    username = st.text_input("Username")
+    password = st.text_input("Password", type="password")
 
     Un = "CHRMO"  # Username
     Pass = "1234" # Password
