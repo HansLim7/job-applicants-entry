@@ -276,7 +276,7 @@ def show_main_page():
     with st.expander("Report a Bug / Feedback"):
         with st.form(key="BugFeed", clear_on_submit=True, border=False):
             st.markdown('Report a bug / Request a Feature / Provide feedback here')
-            user = st.text.input(label="Author")
+            user = st.text_input(label="Author")
             title = st.text_input(label="Title")
             text = st.text_area(label="Description")
             submit = st.form_submit_button(label="Submit")
