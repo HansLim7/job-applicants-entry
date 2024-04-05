@@ -276,6 +276,7 @@ def show_main_page():
     with st.expander("Report a Bug / Feedback"):
         with st.form(key="BugFeed", clear_on_submit=True, border=False):
             st.markdown('Report a bug / Request a Feature / Provide feedback here')
+            user = st.text.input(label="Author")
             title = st.text_input(label="Title")
             text = st.text_area(label="Description")
             submit = st.form_submit_button(label="Submit")
@@ -284,6 +285,7 @@ def show_main_page():
                     st.error("Please fill in both Title and Description.")
                 else:
                     feedback_data = {
+                        "User" : [user],
                         "Title": [title],
                         "Description": [text],
                         "Date Submitted": [datetime.date.today().strftime("%m/%d/%Y")]
