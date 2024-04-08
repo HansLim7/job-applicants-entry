@@ -22,7 +22,7 @@ import re
 # Set page configurations here
 st.set_page_config(
     page_title="JobApplicantsInfo",
-    page_icon="🖊",
+    page_icon=":black_nib:",
 )
 
 # Update google sheet function
@@ -161,7 +161,7 @@ def create_applicant_dataframe(date, date_submitted, name, contact_number, desir
 
 # Main Content
 def show_main_page():
-    st.title("🖊 Job Applicants' Information 🖊")
+    st.title(":black_nib: Job Applicants' Information :black_nib:")
     conn = st.connection("gsheets", type=GSheetsConnection, ttl=5)  # Connect to google sheets
     existing_data = fetch_existing_data(conn)  # Initially get all of the current data from the sheet
     
