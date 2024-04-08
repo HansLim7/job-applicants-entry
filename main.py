@@ -246,7 +246,7 @@ def show_main_page():
                 csv = search_results_date.to_csv(index=False)
                 b64 = base64.b64encode(csv.encode()).decode()
                 file_name = f"{search_date.strftime('%m-%d-%Y')}.csv"
-                href = f'<a href="data:file/csv;base64,{b64}" download="{file_name}">Download</a>'
+                href = f'<a href="data:file/csv;base64,{b64}" download="{file_name}">Download Transmittal</a>'
                 st.markdown(href, unsafe_allow_html=True)
             else:
                 st.info(f"No results found for '{search_date.strftime('%m/%d/%Y')}'")
@@ -269,7 +269,7 @@ def show_main_page():
                 csv = search_results_datesub.to_csv(index=False)
                 b64 = base64.b64encode(csv.encode()).decode()
                 file_name = f"{search_date_submitted.strftime('%m-%d-%Y')}.csv"
-                href = f'<a href="data:file/csv;base64,{b64}" download="{file_name}">Download</a>'
+                href = f'<a href="data:file/csv;base64,{b64}" download="{file_name}">Download Transmittal</a>'
                 st.markdown(href, unsafe_allow_html=True)
             else:
                 st.info(f"No results found for '{search_date_submitted.strftime('%m/%d/%Y')}'")
