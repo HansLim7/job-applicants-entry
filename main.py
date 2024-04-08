@@ -70,13 +70,22 @@ def show_login_page():
             st.error("Invalid username or password. Please try again.")
 
 # Gather the last 10 entries in the google sheet
-def fetch_last_ten_entries(conn):
+def fetch_last_ten_entries(conn, filter_option="All"):
     existing_data = fetch_existing_data(conn)
-    last_ten_entries = existing_data.tail(10)  # Get the last ten entries
+    
+    if filter_option == "Walk-in":
+        last_ten_entries = existing_data[~existing_data["DATE"].str.contains("ONLINE")].tail(10)
+    elif filter_option == "Online":
+        last_ten_entries = existing_data[existing_data["DATE"].str.contains("ONLINE")].tail(10)
+    else:
+        last_ten_entries = existing_data.tail(10)
+    
     # Replace commas in the "CONTACT NUMBER" column
     last_ten_entries = last_ten_entries.copy()
     last_ten_entries.loc[:, "CONTACT NUMBER"] = last_ten_entries["CONTACT NUMBER"].astype(str).str.replace(',', '')
+    
     return last_ten_entries
+
 
 # Show history function
 def show_history_page():
@@ -86,7 +95,9 @@ def show_history_page():
         st.error("Failed to establish Google Sheets connection.")
         return
 
-    last_ten_entries = fetch_last_ten_entries(conn)
+    filter_option = st.radio("Filter:", ("All", "Walk-in", "Online"), index=0)
+    last_ten_entries = fetch_last_ten_entries(conn, filter_option)
+    
     if st.button("Refresh"):
         st.rerun()
     st.write(last_ten_entries)
@@ -161,15 +172,17 @@ def create_applicant_dataframe(date, date_submitted, name, contact_number, desir
 
 # Main Content
 def show_main_page():
-    st.title(":black_nib: Job Applicants' Information :black_nib:")
+    st.title("Applicant Management System:black_nib:")
     conn = st.connection("gsheets", type=GSheetsConnection, ttl=5)  # Connect to google sheets
     existing_data = fetch_existing_data(conn)  # Initially get all of the current data from the sheet
     
    # Main content expander
-    with st.expander(label=":memo: Enter new Applicant"):
+    with st.expander(label=":memo: | Enter new Applicant"):
         # Display form for entering new applicant information
         with st.form(key="Applicants", clear_on_submit=True, border=True):
             st.markdown('**Fields marked with ( * ) are Required.**')
+            st.markdown('Please use Caps Lock when entering info.')
+            st.divider()
             # Ask the user if the submission is online or not
             online_submission = st.checkbox("Online Submission")
             
@@ -210,8 +223,8 @@ def show_main_page():
 
 
     # Search by Name Expander
-    with st.expander(":mag_right: Search by Name"):
-        search_name = st.text_input("Enter name", key="name_input")
+    with st.expander(":mag_right: |  Search by Name"):
+        search_name = st.text_input("Enter name (press 'enter' to search)", key="name_input")
         if search_name:
             search_results_name = existing_data[existing_data["NAME"].str.contains(search_name, case=False, na=False)]
             if not search_results_name.empty:
@@ -224,7 +237,7 @@ def show_main_page():
                 st.info(f"No results found for '{search_name}'")
         
    # Search by Date Expander
-    with st.expander(":calendar: Search by Date"):
+    with st.expander(":calendar: |  Search by Date"):
         search_date = st.date_input("Select a date", key="date_input")
         if search_date:
             filter_options = st.radio("Filter:", ("All", "Walk-in", "Online"), index=0, key="datefilter")
@@ -259,7 +272,7 @@ def show_main_page():
                 st.info(f"No results found for '{search_date.strftime('%m/%d/%Y')}'")
 
    # Search by Date Submitted Expander
-    with st.expander(":date: Search by Date Submitted"):
+    with st.expander(":date: |  Search by Date Submitted"):
         search_date_submitted = st.date_input("Select a date of submission", key="date_sub_input")
         if search_date_submitted:
             filter_options_sub = st.radio("Filter:", ("All", "Walk-in", "Online"), index=0, key="datesubfilter")
@@ -290,13 +303,13 @@ def show_main_page():
                 st.info(f"No results found for '{search_date_submitted.strftime('%m/%d/%Y')}'")
 
     # History Expander
-    with st.expander(":bookmark_tabs: History (Last 10 Entries)"):
+    with st.expander(":bookmark_tabs: |  History (Last 10 Entries)"):
         show_history_page()
         # Link to open the google sheet
         st.link_button(label="Open Google Sheet", help="Open the Google Sheet", type="primary", url="https://docs.google.com/spreadsheets/d/1rHQ924Hn3W4Au_4k90nXr86TlwPZ-JY8wonjO1eJF4Y")
              
     # Feedback Form
-    with st.expander(":speech_balloon: Report a Bug / Feedback"):
+    with st.expander(":speech_balloon: |  Report a Bug / Feedback"):
         with st.form(key="BugFeed", clear_on_submit=True, border=False):
             st.markdown('Report a bug / Request a Feature / Provide feedback here')
             user = st.text_input(label="Author")
@@ -316,21 +329,23 @@ def show_main_page():
                     update_feedback_google_sheet(conn, pd.DataFrame(feedback_data))
                     st.success("Feedback Submitted Successfully.")
 
-            
-    # Create another set of columns for refreshing gsheets connection and web app
-    c1, c2, c3 = st.columns(3)
-    with c1:
-        # Refresh connection button
-        refresh_button = st.button(label="Refresh Connection to Google Sheets", type="secondary", help="Refresh if there are problems connecting to Google Sheets or connection is closed.", key="refresh_button")
-        if refresh_button:
-            refresh()
-    with c2:
-        ref_button = st.button(label = "Refresh web application", help="Refresh the web application to update data")
-        if ref_button:
-            st.rerun()
-    with c3:
-        st.link_button(label="Open Google Sheet", help="Open the Google Sheet", type="primary", url="https://docs.google.com/spreadsheets/d/1rHQ924Hn3W4Au_4k90nXr86TlwPZ-JY8wonjO1eJF4Y")
-        
+  # Utility Functions Expander
+    with st.expander(":gear: |  Utility Functions"):
+        c1, c2 = st.columns(2)
+        with c1:
+            # Refresh connection button
+            refresh_button = st.button(label="Refresh Connection to Google Sheets", type="secondary", help="Refresh if there are problems connecting to Google Sheets or connection is closed.", key="refresh_button")
+            if refresh_button:
+                refresh()
+                
+            # Refresh web application button
+            ref_button = st.button(label="Refresh Web Application", help="Refresh the web application to update data")
+            if ref_button:
+                st.rerun()
+        with c2:
+            # Open Google Sheet button
+            st.link_button(label="Open Google Sheet", help="Open the Google Sheet", type="primary", url="https://docs.google.com/spreadsheets/d/1rHQ924Hn3W4Au_4k90nXr86TlwPZ-JY8wonjO1eJF4Y")
+        st.write('This web application is developed by Hans Anthony T. Lim, BSCpE-4 @ La Salle University Ozamiz')
 # Initially run the main function when web app is opened
 if __name__ == "__main__":
     main()
