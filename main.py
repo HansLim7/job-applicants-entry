@@ -92,10 +92,18 @@ def show_history_page():
     st.write(last_ten_entries)
         
 
-# Fetch existing data in the google sheet
 def fetch_existing_data(conn):
-    existing_data = conn.read(worksheet="Applicants", usecols=list(range(12)), ttl=5)
+    # Define the column names to retrieve from Google Sheets
+    columns = ["DATE", "DATE SUBMITTED", "NAME", "CONTACT NUMBER", "DESIRED POSITION", 
+               "FORWARDED FROM", "ADDRESS", "EDUCATIONAL ATTAINMENT", "CSC ELIGIBILITY", 
+               "AGE", "GENDER", "CURRENT POSITION"]
+
+    # Fetch data from Google Sheets with specified columns
+    existing_data = conn.read(worksheet="Applicants", usecols=columns, ttl=5)
+    
+    # Drop any rows with all NaN values
     existing_data = existing_data.dropna(how="all")
+    
     return existing_data
 
 # Function to calculate age from birthday
@@ -158,7 +166,7 @@ def show_main_page():
     existing_data = fetch_existing_data(conn)  # Initially get all of the current data from the sheet
     
    # Main content expander
-    with st.expander(label="Enter new Applicant"):
+    with st.expander(label=":memo: Enter new Applicant"):
         # Display form for entering new applicant information
         with st.form(key="Applicants", clear_on_submit=True, border=True):
             st.markdown('**Fields marked with ( * ) are Required.**')
@@ -202,7 +210,7 @@ def show_main_page():
 
 
     # Search by Name Expander
-    with st.expander("Search by Name"):
+    with st.expander(":mag_right: Search by Name"):
         search_name = st.text_input("Enter name", key="name_input")
         if search_name:
             search_results_name = existing_data[existing_data["NAME"].str.contains(search_name, case=False, na=False)]
@@ -216,7 +224,7 @@ def show_main_page():
                 st.info(f"No results found for '{search_name}'")
         
     # Search by Date Expander
-    with st.expander("Search by Date"):
+    with st.expander(":calendar: Search by Date"):
         search_date = st.date_input("Select a date", key="date_input")
         if search_date:
             search_results_date = existing_data[existing_data["DATE"].str.contains(search_date.strftime('%m/%d/%Y'), case=False, na=False)]
@@ -244,7 +252,7 @@ def show_main_page():
                 st.info(f"No results found for '{search_date.strftime('%m/%d/%Y')}'")
 
     # Search by Date Submitted Expander
-    with st.expander("Search by Date Submitted"):
+    with st.expander(":date: Search by Date Submitted"):
         search_date_submitted = st.date_input("Select a date of submission", key="date_sub_input")
         if search_date_submitted:
             search_results_datesub = existing_data[existing_data["DATE SUBMITTED"].str.contains(search_date_submitted.strftime('%m/%d/%Y'), case=False, na=False)]
