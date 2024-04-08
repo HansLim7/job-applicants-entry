@@ -223,11 +223,18 @@ def show_main_page():
             else:
                 st.info(f"No results found for '{search_name}'")
         
-    # Search by Date Expander
+   # Search by Date Expander
     with st.expander(":calendar: Search by Date"):
         search_date = st.date_input("Select a date", key="date_input")
         if search_date:
-            search_results_date = existing_data[existing_data["DATE"].str.contains(search_date.strftime('%m/%d/%Y'), case=False, na=False)]
+            filter_options = st.radio("Filter:", ("All", "Walk-in", "Online"), index=0, key="datefilter")
+            if filter_options == "All":
+                search_results_date = existing_data[existing_data["DATE"].str.contains(search_date.strftime('%m/%d/%Y'), case=False, na=False)]
+            elif filter_options == "Walk-in":
+                search_results_date = existing_data[(existing_data["DATE"].str.contains(search_date.strftime('%m/%d/%Y'), case=False, na=False)) & (~existing_data["DATE"].str.contains("ONLINE"))]
+            else:
+                search_results_date = existing_data[(existing_data["DATE"].str.contains(search_date.strftime('%m/%d/%Y'), case=False, na=False)) & (existing_data["DATE"].str.contains("ONLINE"))]
+            
             if not search_results_date.empty:
                 # Create a copy of the DataFrame before modifying it
                 search_results_date = search_results_date.copy()
@@ -251,14 +258,22 @@ def show_main_page():
             else:
                 st.info(f"No results found for '{search_date.strftime('%m/%d/%Y')}'")
 
-    # Search by Date Submitted Expander
+   # Search by Date Submitted Expander
     with st.expander(":date: Search by Date Submitted"):
         search_date_submitted = st.date_input("Select a date of submission", key="date_sub_input")
         if search_date_submitted:
-            search_results_datesub = existing_data[existing_data["DATE SUBMITTED"].str.contains(search_date_submitted.strftime('%m/%d/%Y'), case=False, na=False)]
+            filter_options_sub = st.radio("Filter:", ("All", "Walk-in", "Online"), index=0, key="datesubfilter")
+            if filter_options_sub == "All":
+                search_results_datesub = existing_data[existing_data["DATE SUBMITTED"].str.contains(search_date_submitted.strftime('%m/%d/%Y'), case=False, na=False)]
+            elif filter_options_sub == "Walk-in":
+                search_results_datesub = existing_data[(existing_data["DATE SUBMITTED"].str.contains(search_date_submitted.strftime('%m/%d/%Y'), case=False, na=False)) & (~existing_data["DATE SUBMITTED"].str.contains("ONLINE"))]
+            else:
+                search_results_datesub = existing_data[(existing_data["DATE SUBMITTED"].str.contains(search_date_submitted.strftime('%m/%d/%Y'), case=False, na=False)) & (existing_data["DATE SUBMITTED"].str.contains("ONLINE"))]
+            
             if not search_results_datesub.empty:
                 # Create a copy of the DataFrame before modifying it
                 search_results_datesub = search_results_datesub.copy()
+                # Convert 'CONTACT NUMBER' column to string and then replace commas
                 search_results_datesub.loc[:, "CONTACT NUMBER"] = search_results_datesub["CONTACT NUMBER"].astype(str).str.replace(',', '')
                 # Add a new column for row numbering
                 search_results_datesub.insert(0, ' ', range(1, len(search_results_datesub) + 1))
