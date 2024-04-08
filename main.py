@@ -275,13 +275,13 @@ def show_main_page():
                 st.info(f"No results found for '{search_date_submitted.strftime('%m/%d/%Y')}'")
 
     # History Expander
-    with st.expander("History (Last 10 Entries)"):
+    with st.expander(":bookmark_tabs: History (Last 10 Entries)"):
         show_history_page()
         # Link to open the google sheet
         st.link_button(label="Open Google Sheet", help="Open the Google Sheet", type="primary", url="https://docs.google.com/spreadsheets/d/1rHQ924Hn3W4Au_4k90nXr86TlwPZ-JY8wonjO1eJF4Y")
              
     # Feedback Form
-    with st.expander("Report a Bug / Feedback"):
+    with st.expander(":speech_balloon: Report a Bug / Feedback"):
         with st.form(key="BugFeed", clear_on_submit=True, border=False):
             st.markdown('Report a bug / Request a Feature / Provide feedback here')
             user = st.text_input(label="Author")
@@ -290,7 +290,7 @@ def show_main_page():
             submit = st.form_submit_button(label="Submit")
             if submit:
                 if title.strip() == "" or text.strip() == "":
-                    st.error("Please fill in both Title and Description.")
+                    st.error(":speech_balloon: Please fill in both Title and Description.")
                 else:
                     feedback_data = {
                         "User" : [user],
