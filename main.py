@@ -85,8 +85,7 @@ def fetch_last_ten_entries(conn, filter_option="All"):
     last_ten_entries.loc[:, "CONTACT NUMBER"] = last_ten_entries["CONTACT NUMBER"].astype(str).str.replace(',', '')
     
     return last_ten_entries
-
-
+    
 # Show history function
 def show_history_page():
     st.title("History (Last Ten Entries)")
@@ -345,7 +344,10 @@ def show_main_page():
         with c2:
             # Open Google Sheet button
             st.link_button(label="Open Google Sheet", help="Open the Google Sheet", type="primary", url="https://docs.google.com/spreadsheets/d/1rHQ924Hn3W4Au_4k90nXr86TlwPZ-JY8wonjO1eJF4Y")
+            st.link_button(label="Documentation", help="Open Documentation", type="primary", url="https://docs.google.com/document/d/1z7xYV0r2Q0subw_HNILCXDTKl_uNttK3Nztw3ttJkd8/edit?usp=sharing")
         st.write('This web application is developed by Hans Anthony T. Lim, BSCpE-4 @ La Salle University Ozamiz')
+
+
 # Initially run the main function when web app is opened
 if __name__ == "__main__":
     main()
