@@ -409,7 +409,7 @@ def hans_content():
     if not feedback_data.empty:
         selected_columns = ["User", "Title", "Description", "Date Submitted"]
         feedback_data = feedback_data[selected_columns]
-        st.table(feedback_data)
+        st.write(feedback_data)
     else:
         st.info("No feedback data available.")
 
