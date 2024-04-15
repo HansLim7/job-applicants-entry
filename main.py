@@ -65,6 +65,7 @@ def show_login_page():
         else:
             st.sidebar.error("Invalid username or password")
             st.warning("Please check your credentials and try again.")
+    st.write('If you are on mobile, please login through the side bar (top left arrow)')
 
 # Authentication function
 def authenticate(username, password):
