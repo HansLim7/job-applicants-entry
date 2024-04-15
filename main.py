@@ -93,6 +93,8 @@ def authenticate(username, password):
         return True
     elif username == "Hans" and password == "Lim":
         return True
+    elif username == "test" and password == "abdcef":
+        return True
     else:
         return False
 
@@ -438,9 +440,7 @@ def show_main_page():
     if st.session_state["user"] == "Hans":
         hans_content()
     else:
-        main_content()
-    
-        
+        main_content()      
 
 
 # Initially run the main function when web app is opened
