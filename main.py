@@ -61,10 +61,15 @@ def show_login_page():
     if st.sidebar.button("Login"):
         if authenticate(username, password):
             st.session_state["user"] = username
+            st.sidebar.success("Successfully logged in.")
+            time.sleep(2)
             st.rerun()
+        elif not all ([username, password]):
+            st.sidebar.error("Enter a username or password.")
         else:
-            st.sidebar.error("Invalid username or password")
-            st.warning("Please check your credentials and try again.")
+
+            st.sidebar.warning("Please check your credentials and try again.")
+
     st.markdown("**Welcome to the CHRMO Applicant Management System**")
     st.write('Please log in through the side bar.')
     st.write('If you are on mobile, access the side bar by tapping the top left arrow')
@@ -197,6 +202,7 @@ def show_applicants_chart(existing_data):
     
     # Show the chart
     st.plotly_chart(fig)
+
 
 # Main Content
 def main_content():
@@ -384,6 +390,8 @@ def main_content():
     # Logout button
     if st.button("Logout"):
         del st.session_state["user"]
+        st.write("Logging Out...")
+        time.sleep(1)
         st.rerun()
 
 # Hans Content
@@ -394,7 +402,7 @@ def hans_content():
     if conn is None:
         st.error("Failed to establish Google Sheets connection.")
         return
-    if st.button("refresh"):
+    if st.button("Refresh"):
         st.rerun()
 
     feedback_data = conn.read(worksheet="feedback", ttl=5)
@@ -408,6 +416,8 @@ def hans_content():
     # Logout button
     if st.button("Logout"):
         del st.session_state["user"]
+        st.write("Logging Out...")
+        time.sleep(1)
         st.rerun()
 
 # Main Page
