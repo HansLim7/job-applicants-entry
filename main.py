@@ -55,7 +55,7 @@ def main():
 
 # Login page
 def show_login_page():
-    st.sidebar.title("CHRMO Applicant Management System")
+    st.sidebar.image('chrmo.png')
     username = st.sidebar.text_input("Username")
     password = st.sidebar.text_input("Password", type="password")
     if st.sidebar.button("Login"):
@@ -70,6 +70,7 @@ def show_login_page():
 
             st.sidebar.warning("Please check your credentials and try again.")
 
+    st.image('chrmo.png')
     st.markdown("**Welcome to the CHRMO Applicant Management System**")
     st.write('Please log in through the side bar.')
     st.write('If you are on mobile, access the side bar by tapping the top left arrow')
