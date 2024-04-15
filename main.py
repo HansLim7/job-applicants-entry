@@ -342,7 +342,7 @@ def main_content():
     with st.expander(":bookmark_tabs: |  History (Last 10 Entries)"):
         show_history_page()
         # Link to open the google sheet
-        st.link_button(label="Open Google Sheet", help="Open the Google Sheet", type="primary", url="https://docs.google.com/spreadsheets/d/1rHQ924Hn3W4Au_4k90nXr86TlwPZ-JY8wonjO1eJF4Y")
+        st.link_button(label="Open Google Sheet", help="Open the Google Sheet", type="primary", url="https://docs.google.com/spreadsheets/d/1hmxu-9cIt3X8IP3OhhZRjJt_NHHqQSzjwqcEOvLadHw")
 
     # Analytics dataframe
     with st.expander(":bar_chart: | Analytics"):
