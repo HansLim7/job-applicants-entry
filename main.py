@@ -69,11 +69,22 @@ def show_login_page():
         else:
 
             st.sidebar.warning("Please check your credentials and try again.")
-
+    st.sidebar.divider()
+    
     st.image('chrmo.png')
     st.markdown("**Welcome to the CHRMO Applicant Management System**")
     st.write('Please log in through the side bar.')
     st.write('If you are on mobile, access the side bar by tapping the top left arrow')
+
+    # Web application description expander
+    if st.sidebar.button("About this application"):
+        st.sidebar.markdown('~ This web application is the CHRMO Applicant Management System (CHRMOAMS).')
+        st.sidebar.markdown('~ This web application is used to manage various information of job applicants in the CHRMO.')
+        st.sidebar.markdown('~ Developed for CHRMO Ozamiz')
+        st.sidebar.markdown('~ Developed by Hans Anthony T. Lim, BS Computer Engineering 4 @ La Salle University Ozamiz.')
+        if st.sidebar.button("Hide Description"):
+            st.rerun()
+
 
 # Authentication function
 def authenticate(username, password):
