@@ -19,6 +19,9 @@ import base64
 import datetime
 import re
 
+# Import Plotly for visualization
+import plotly.express as px
+
 # Set page configurations here
 st.set_page_config(
     page_title="CHRMO-AMS",
@@ -168,6 +171,25 @@ def create_applicant_dataframe(date, date_submitted, name, contact_number, desir
         "CURRENT POSITION": [current_pos]
     }
     return pd.DataFrame(applicant_data)
+
+# Function to create a chart based on the number of applicants over time
+def show_applicants_chart(existing_data):
+    # Convert the 'DATE' column to datetime format
+    existing_data['DATE'] = pd.to_datetime(existing_data['DATE'], errors='coerce')
+    
+    # Remove any rows with missing dates
+    existing_data.dropna(subset=['DATE'], inplace=True)
+    
+    # Group the data by date and count the number of applicants for each date
+    applicants_count = existing_data.groupby('DATE').size().reset_index(name='Applicants')
+
+    # Create a line chart using Plotly
+    fig = px.line(applicants_count, x='DATE', y='Applicants', title='Number of Applicants Over Time')
+    fig.update_xaxes(title='Date')
+    fig.update_yaxes(title='Number of Applicants')
+    
+    # Show the chart
+    st.plotly_chart(fig)
 
 # Main Content
 def show_main_page():
@@ -329,7 +351,11 @@ def show_main_page():
                     update_feedback_google_sheet(conn, pd.DataFrame(feedback_data))
                     st.success("Feedback Submitted Successfully.")
 
-  # Utility Functions Expander
+    # Analytics dataframe
+    with st.expander(":bar_chart: | Analytics"):
+        show_applicants_chart(existing_data)
+
+    # Utility Functions Expander
     with st.expander(":gear: |  Utility Functions"):
         c1, c2 = st.columns(2)
         with c1:
