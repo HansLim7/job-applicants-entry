@@ -61,11 +61,13 @@ def show_login_page():
     if st.sidebar.button("Login"):
         if authenticate(username, password):
             st.session_state["user"] = username
-            st.experimental_rerun()
+            st.rerun()
         else:
             st.sidebar.error("Invalid username or password")
             st.warning("Please check your credentials and try again.")
-    st.write('If you are on mobile, please login through the side bar (top left arrow)')
+    st.markdown("**Welcome to the CHRMO Applicant Management System**")
+    st.write('Please log in through the side bar.')
+    st.write('If you are on mobile, access the side bar by tapping the top left arrow')
 
 # Authentication function
 def authenticate(username, password):
