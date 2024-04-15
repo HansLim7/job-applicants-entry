@@ -389,8 +389,8 @@ def main_content():
    
     # Logout button
     if st.button("Logout"):
-        del st.session_state["user"]
         st.write("Logging Out...")
+        del st.session_state["user"]
         time.sleep(1)
         st.rerun()
 
@@ -415,8 +415,8 @@ def hans_content():
 
     # Logout button
     if st.button("Logout"):
-        del st.session_state["user"]
         st.write("Logging Out...")
+        del st.session_state["user"]
         time.sleep(1)
         st.rerun()
 
