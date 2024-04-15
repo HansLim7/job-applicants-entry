@@ -21,7 +21,7 @@ import re
 
 # Set page configurations here
 st.set_page_config(
-    page_title="JobApplicantsInfo",
+    page_title="CHRMO-AMS",
     page_icon=":black_nib:",
 )
 
@@ -204,6 +204,7 @@ def show_main_page():
                 educational_attainment = st.text_area(label="Educational Attainment")
                 csc_eligibility = st.text_area(label="CSC Eligibility", help="Leave blank if N/A")
 
+            st.divider()
             # Submit data button    
             submit_button = st.form_submit_button(label="Submit Data", type="primary")
             if submit_button:
@@ -345,7 +346,7 @@ def show_main_page():
             # Open Google Sheet button
             st.link_button(label="Open Google Sheet", help="Open the Google Sheet", type="primary", url="https://docs.google.com/spreadsheets/d/1rHQ924Hn3W4Au_4k90nXr86TlwPZ-JY8wonjO1eJF4Y")
             st.link_button(label="Documentation", help="Open Documentation", type="primary", url="https://docs.google.com/document/d/1z7xYV0r2Q0subw_HNILCXDTKl_uNttK3Nztw3ttJkd8/edit?usp=sharing")
-        st.write('This web application is developed by Hans Anthony T. Lim, BSCpE-4 @ La Salle University Ozamiz')
+        
 
 
 # Initially run the main function when web app is opened
