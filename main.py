@@ -48,29 +48,30 @@ def refresh():
 
 # Main function to determine if user is authenticated or not
 def main():
-    if "authenticated" not in st.session_state:
-        st.session_state.authenticated = False
-    if not st.session_state.authenticated:
+    if "user" not in st.session_state:
         show_login_page()
     else:
         show_main_page()
 
 # Login page
 def show_login_page():
-    st.title("Login")
-    username = st.text_input("Username")
-    password = st.text_input("Password", type="password")
-
-    Un = "CHRMO"  # Username
-    Pass = "1234" # Password
-
-    login_button = st.button(label="Login", type="primary")
-    if login_button:
-        if username == Un and password == Pass:  # Check if credentials are correct
-            st.session_state.authenticated = True
-            st.success("Logged in, Click on 'login' again to proceed.")
+    st.sidebar.title("CHRMO Applicant Management System")
+    username = st.sidebar.text_input("Username")
+    password = st.sidebar.text_input("Password", type="password")
+    if st.sidebar.button("Login"):
+        if authenticate(username, password):
+            st.session_state["user"] = username
+            st.experimental_rerun()
         else:
-            st.error("Invalid username or password. Please try again.")
+            st.sidebar.error("Invalid username or password")
+            st.warning("Please check your credentials and try again.")
+
+def authenticate(username, password):
+    # Replace with your authentication logic
+    if username == "CHRMO" and password == "1234":
+        return True
+    else:
+        return False
 
 # Gather the last 10 entries in the google sheet
 def fetch_last_ten_entries(conn, filter_option="All"):
@@ -194,6 +195,7 @@ def show_applicants_chart(existing_data):
 # Main Content
 def show_main_page():
     st.title("Applicant Management System:black_nib:")
+    st.write(f"Welcome, {st.session_state['user']}")
     conn = st.connection("gsheets", type=GSheetsConnection, ttl=5)  # Connect to google sheets
     existing_data = fetch_existing_data(conn)  # Initially get all of the current data from the sheet
     
