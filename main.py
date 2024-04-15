@@ -111,7 +111,7 @@ def show_history_page():
         st.rerun()
     st.write(last_ten_entries)
         
-
+# Fetch existing data
 def fetch_existing_data(conn):
     # Define the column names to retrieve from Google Sheets
     columns = ["DATE", "DATE SUBMITTED", "NAME", "CONTACT NUMBER", "DESIRED POSITION", 
@@ -199,7 +199,7 @@ def show_applicants_chart(existing_data):
     st.plotly_chart(fig)
 
 # Main Content
-def show_main_page():
+def main_content():
     st.title("Applicant Management System:black_nib:")
     st.write(f"Welcome, {st.session_state['user']}")
     conn = st.connection("gsheets", type=GSheetsConnection, ttl=5)  # Connect to google sheets
@@ -380,6 +380,43 @@ def show_main_page():
             # Open Google Sheet button
             st.link_button(label="Open Google Sheet", help="Open the Google Sheet", type="primary", url="https://docs.google.com/spreadsheets/d/1rHQ924Hn3W4Au_4k90nXr86TlwPZ-JY8wonjO1eJF4Y")
             st.link_button(label="Documentation", help="Open Documentation", type="primary", url="https://docs.google.com/document/d/1z7xYV0r2Q0subw_HNILCXDTKl_uNttK3Nztw3ttJkd8/edit?usp=sharing")
+   
+    # Logout button
+    if st.button("Logout"):
+        del st.session_state["user"]
+        st.rerun()
+
+# Hans Content
+def hans_content():
+    st.write(f"Welcome, {st.session_state['user']}")
+    st.title("Feedback Data")
+    conn = st.connection("gsheets", type=GSheetsConnection, ttl=5)
+    if conn is None:
+        st.error("Failed to establish Google Sheets connection.")
+        return
+    if st.button("refresh"):
+        st.rerun()
+
+    feedback_data = conn.read(worksheet="feedback", ttl=5)
+    if not feedback_data.empty:
+        selected_columns = ["User", "Title", "Description", "Date Submitted"]
+        feedback_data = feedback_data[selected_columns]
+        st.write(feedback_data)
+    else:
+        st.info("No feedback data available.")
+
+    # Logout button
+    if st.button("Logout"):
+        del st.session_state["user"]
+        st.rerun()
+        
+# Main Page
+def show_main_page():
+    if st.session_state["user"] == "Hans":
+        hans_content()
+    else:
+        main_content()
+    
         
 
 
