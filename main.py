@@ -70,11 +70,11 @@ def show_login_page():
 
             st.sidebar.warning("Please check your credentials and try again.")
     st.sidebar.divider()
-    
+
     st.image('chrmo.png')
-    st.markdown("**Welcome to the CHRMO Applicant Management System**")
+    st.markdown("**Welcome to the CHRMO Applicant Management System.**")
     st.write('Please log in through the side bar.')
-    st.write('If you are on mobile, access the side bar by tapping the top left arrow')
+    st.write('If you are on mobile, access the side bar by tapping the top left arrow.')
 
     # Web application description expander
     if st.sidebar.button("About this application"):
