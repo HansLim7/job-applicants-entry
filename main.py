@@ -378,7 +378,7 @@ def main_content():
                 st.rerun()
         with c2:
             # Open Google Sheet button
-            st.link_button(label="Open Google Sheet", help="Open the Google Sheet", type="primary", url="https://docs.google.com/spreadsheets/d/1rHQ924Hn3W4Au_4k90nXr86TlwPZ-JY8wonjO1eJF4Y")
+            st.link_button(label="Open Google Sheet", help="Open the Google Sheet", type="primary", url="https://docs.google.com/spreadsheets/d/1hmxu-9cIt3X8IP3OhhZRjJt_NHHqQSzjwqcEOvLadHw")
             st.link_button(label="Documentation", help="Open Documentation", type="primary", url="https://docs.google.com/document/d/1z7xYV0r2Q0subw_HNILCXDTKl_uNttK3Nztw3ttJkd8/edit?usp=sharing")
    
     # Logout button
@@ -409,7 +409,7 @@ def hans_content():
     if st.button("Logout"):
         del st.session_state["user"]
         st.rerun()
-        
+
 # Main Page
 def show_main_page():
     if st.session_state["user"] == "Hans":
