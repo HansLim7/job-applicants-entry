@@ -343,7 +343,11 @@ def main_content():
         show_history_page()
         # Link to open the google sheet
         st.link_button(label="Open Google Sheet", help="Open the Google Sheet", type="primary", url="https://docs.google.com/spreadsheets/d/1rHQ924Hn3W4Au_4k90nXr86TlwPZ-JY8wonjO1eJF4Y")
-             
+
+    # Analytics dataframe
+    with st.expander(":bar_chart: | Analytics"):
+        show_applicants_chart(existing_data)
+
     # Feedback Form
     with st.expander(":speech_balloon: |  Report a Bug / Feedback"):
         with st.form(key="BugFeed", clear_on_submit=True, border=False):
@@ -364,10 +368,6 @@ def main_content():
                     }
                     update_feedback_google_sheet(conn, pd.DataFrame(feedback_data))
                     st.success("Feedback Submitted Successfully.")
-
-    # Analytics dataframe
-    with st.expander(":bar_chart: | Analytics"):
-        show_applicants_chart(existing_data)
 
     # Utility Functions Expander
     with st.expander(":gear: |  Utility Functions"):
