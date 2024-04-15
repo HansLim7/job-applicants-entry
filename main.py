@@ -66,9 +66,12 @@ def show_login_page():
             st.sidebar.error("Invalid username or password")
             st.warning("Please check your credentials and try again.")
 
+# Authentication function
 def authenticate(username, password):
-    # Replace with your authentication logic
+    # Users here
     if username == "CHRMO" and password == "1234":
+        return True
+    elif username == "Hans" and password == "Lim":
         return True
     else:
         return False
