@@ -93,7 +93,7 @@ def authenticate(username, password):
         return True
     elif username == "Hans" and password == "Lim":
         return True
-    elif username == "test" and password == "abdcef":
+    elif username == "test" and password == "abcdef":
         return True
     else:
         return False
