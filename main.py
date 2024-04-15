@@ -207,8 +207,9 @@ def show_applicants_chart(existing_data):
 
 # Main Content
 def main_content():
-    st.title("Applicant Management System:black_nib:")
-    st.write(f"Welcome, {st.session_state['user']}")
+   
+    st.title("Applicant Management System")
+    st.write(f"Welcome, {st.session_state['user']}.")
     conn = st.connection("gsheets", type=GSheetsConnection, ttl=5)  # Connect to google sheets
     existing_data = fetch_existing_data(conn)  # Initially get all of the current data from the sheet
     
@@ -397,7 +398,7 @@ def main_content():
 
 # Hans Content
 def hans_content():
-    st.write(f"Welcome, {st.session_state['user']}")
+    st.write(f"Welcome, {st.session_state['user']}.")
     st.title("Feedback Data")
     conn = st.connection("gsheets", type=GSheetsConnection, ttl=5)
     if conn is None:
