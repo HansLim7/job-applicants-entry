@@ -207,9 +207,9 @@ def show_applicants_chart(existing_data):
     
     # Group the data by date and count the number of applicants for each date
     applicants_count = existing_data.groupby('DATE').size().reset_index(name='Applicants')
-
+    st.title("Number of Applicants Over Time")
     # Create a line chart using Plotly
-    fig = px.line(applicants_count, x='DATE', y='Applicants', title='Number of Applicants Over Time')
+    fig = px.line(applicants_count, x='DATE', y='Applicants')
     fig.update_xaxes(title='Date')
     fig.update_yaxes(title='Number of Applicants')
     
@@ -370,7 +370,7 @@ def main_content():
     # Analytics dataframe
     with tab4:
         show_applicants_chart(existing_data)
-
+    
     # Feedback Form
     with tab5:
         with st.form(key="BugFeed", clear_on_submit=True, border=False):
