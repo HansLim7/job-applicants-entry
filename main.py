@@ -225,8 +225,9 @@ def main_content():
     conn = st.connection("gsheets", type=GSheetsConnection, ttl=5)  # Connect to google sheets
     existing_data = fetch_existing_data(conn)  # Initially get all of the current data from the sheet
     
+    tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["Enter New Applicant","Search","History","Analytics","Feedback","Utilities"])
    # Enter Applicant Expander
-    with st.expander(label=":memo: | Enter new Applicant"):
+    with tab1:
         # Display form for entering new applicant information
         with st.form(key="Applicants", clear_on_submit=True, border=True):
             st.markdown('**Fields marked with ( * ) are Required.**')
@@ -272,8 +273,8 @@ def main_content():
                     st.success("Data Successfully Submitted.")
 
 
-    # Search by Name Expander
-    with st.expander(":mag_right: |  Search"):
+    # Search 
+    with tab2:
         searchtype = st.selectbox("Search by:",("Name","Date","Date Submitted"), index=None)  # Search filters
         if searchtype == "Name":
             search_name = st.text_input("Enter name (press 'enter' to search)", key="name_input")
@@ -354,17 +355,17 @@ def main_content():
                     st.info(f"No results found for '{search_date_submitted.strftime('%m/%d/%Y')}'")
 
     # History Expander
-    with st.expander(":bookmark_tabs: |  History (Last 10 Entries)"):
+    with tab3:
         show_history_page()
         # Link to open the google sheet
         st.link_button(label="Open Google Sheet", help="Open the Google Sheet", type="primary", url="https://docs.google.com/spreadsheets/d/1hmxu-9cIt3X8IP3OhhZRjJt_NHHqQSzjwqcEOvLadHw")
 
     # Analytics dataframe
-    with st.expander(":bar_chart: | Analytics"):
+    with tab4:
         show_applicants_chart(existing_data)
 
     # Feedback Form
-    with st.expander(":speech_balloon: |  Report a Bug / Feedback"):
+    with tab5:
         with st.form(key="BugFeed", clear_on_submit=True, border=False):
             st.markdown('Report a bug / Request a Feature / Provide feedback here')
             user = st.text_input(label="Author")
@@ -385,7 +386,7 @@ def main_content():
                     st.success("Feedback Submitted Successfully.")
 
     # Utility Functions Expander
-    with st.expander(":gear: |  Utility Functions"):
+    with tab6:
         c1, c2 = st.columns(2)
         with c1:
             # Refresh connection button
