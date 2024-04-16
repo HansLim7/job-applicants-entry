@@ -74,7 +74,8 @@ def show_login_page():
     st.image('chrmo2.png')
 
     # Web application description expander
-    if st.sidebar.button("About this application"):
+    login_button = st.sidebar.button(label="Log in", type ='primary')
+    if login_button:
         st.sidebar.markdown('~ This web application is the CHRMO Applicant Management System (CHRMOAMS).')
         st.sidebar.markdown('~ This web application is used to manage various information of job applicants in the CHRMO.')
         st.sidebar.markdown('~ Developed for CHRMO Ozamiz')
@@ -400,7 +401,8 @@ def main_content():
             st.link_button(label="Documentation", help="Open Documentation", type="primary", url="https://docs.google.com/document/d/1z7xYV0r2Q0subw_HNILCXDTKl_uNttK3Nztw3ttJkd8/edit?usp=sharing")
    
     # Logout button
-    if st.button("Logout"):
+    logout_button = st.button(label="Log out", type='primary')
+    if logout_button:
         st.write("Logging Out...")
         del st.session_state["user"]
         time.sleep(1)
