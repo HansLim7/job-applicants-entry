@@ -232,7 +232,7 @@ def main_content():
     conn = st.connection("gsheets", type=GSheetsConnection, ttl=5)  # Connect to google sheets
     existing_data = fetch_existing_data(conn)  # Initially get all of the current data from the sheet
     
-    tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["Enter New Applicant","Search","History","Analytics","Feedback","Utilities"])
+    tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([":memo:Enter New Applicant",":mag_right:Search",":bookmark_tabs:History",":chart_with_upwards_trend:Analytics",":speech_balloon:Feedback",":gear:Utilities"])
    # Enter Applicant Expander
     with tab1:
         # Display form for entering new applicant information
