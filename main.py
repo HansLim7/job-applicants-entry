@@ -58,7 +58,8 @@ def show_login_page():
     st.sidebar.image('chrmo.png')
     username = st.sidebar.text_input("Username")
     password = st.sidebar.text_input("Password", type="password")
-    if st.sidebar.button("Login"):
+    login_button = st.sidebar.button(label="Log in", type='primary')
+    if login_button:
         if authenticate(username, password):
             st.session_state["user"] = username
             st.sidebar.success("Successfully logged in.")
@@ -74,8 +75,8 @@ def show_login_page():
     st.image('chrmo2.png')
 
     # Web application description expander
-    login_button = st.sidebar.button(label="Log in", type ='primary')
-    if login_button:
+    about_button = st.sidebar.button(label="About this app", type ='secondary')
+    if about_button:
         st.sidebar.markdown('~ This web application is the CHRMO Applicant Management System (CHRMOAMS).')
         st.sidebar.markdown('~ This web application is used to manage various information of job applicants in the CHRMO.')
         st.sidebar.markdown('~ Developed for CHRMO Ozamiz')
