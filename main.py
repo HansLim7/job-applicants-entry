@@ -238,8 +238,6 @@ def edit_data():
             st.success("Data updated successfully!")
             time.sleep(1)
             st.rerun()
-        if st.button("Refresh"):
-            st.rerun()
 
     else:
         st.info("No entries found.")
@@ -451,6 +449,9 @@ def main_content():
     # Edit data tab
     with tab6:
         edit_data()
+        refr = st.button(label="Refresh")
+        if refr:
+            st.rerun()
 
     # Utility Functions Tab
     with tab7:
