@@ -399,7 +399,8 @@ def main_content():
     
     # Feedback Form
     with tab5:
-        with st.form(key="BugFeed", clear_on_submit=True, border=False):
+        with st.form(key="BugFeed", clear_on_submit=True, border=True):
+            st.title("Feedback Form")
             st.markdown('Report a bug / Request a Feature / Provide feedback here')
             user = st.text_input(label="Author")
             title = st.text_input(label="Title")
