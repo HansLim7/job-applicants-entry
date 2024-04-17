@@ -282,7 +282,7 @@ def main_content():
 
     # Search 
     with tab2:
-        searchtype = st.selectbox("Search by:",("Name","Date","Date Submitted"), index=None)  # Search filters
+        searchtype = st.selectbox("Search by:",("Name","Date","Date Submitted","Year"), index=None)  # Search filters
         if searchtype == "Name":
             search_name = st.text_input("Enter name (press 'enter' to search)", key="name_input")
             if search_name:
@@ -360,6 +360,29 @@ def main_content():
                     st.markdown(href, unsafe_allow_html=True)
                 else:
                     st.info(f"No results found for '{search_date_submitted.strftime('%m/%d/%Y')}'")
+
+        if searchtype == "Year":
+            year_input = st.number_input("Search by Year", min_value=2023, max_value=2050, value=2023, step=1)
+            if year_input:
+                existing_data = fetch_existing_data(conn)
+
+                # Filter the data based on the selected year
+                search_results_year = existing_data[existing_data["DATE"].str.contains(str(year_input), na=False)]
+
+                if not search_results_year.empty:
+                    search_results_year = search_results_year.copy()
+                    search_results_year.loc[:, "CONTACT NUMBER"] = search_results_year["CONTACT NUMBER"].astype(str).str.replace(',', '')
+                    st.subheader(f"Search Results for Year {year_input}")
+                    st.write(search_results_year)
+
+                    # Download button
+                    csv = search_results_year.to_csv(index=False)
+                    b64 = base64.b64encode(csv.encode()).decode()
+                    file_name = f"APPLICANT SUMMARY {year_input}.csv"
+                    href = f'<a href="data:file/csv;base64,{b64}" download="{file_name}">Download Summary</a>'
+                    st.markdown(href, unsafe_allow_html=True)
+                else:
+                    st.info(f"No results found for year {year_input}")
 
     # History Expander
     with tab3:
