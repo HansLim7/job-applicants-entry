@@ -236,8 +236,14 @@ def edit_data():
             # Update the original dataset with the edited data
             update_google_sheet(conn, edited_data)
             st.success("Data updated successfully!")
+            time.sleep(1)
+            st.rerun()
+        if st.button("Refresh"):
+            st.rerun()
+
     else:
         st.info("No entries found.")
+    
 
 # Main Content
 def main_content():
