@@ -216,6 +216,28 @@ def show_applicants_chart(existing_data):
     # Show the chart
     st.plotly_chart(fig)
 
+def edit_data():
+    st.title("Edit Existing Data")
+    conn = st.connection("gsheets", type=GSheetsConnection, ttl=5)
+    if conn is None:
+        st.error("Failed to establish Google Sheets connection.")
+        return
+
+    existing_data = fetch_existing_data(conn)
+    if not existing_data.empty:
+        existing_data = existing_data.copy()
+        existing_data.loc[:, "CONTACT NUMBER"] = existing_data["CONTACT NUMBER"].astype(str).str.replace(',', '')
+        st.write("Enter full screen at the top right of the table")
+
+        # Allow editing of all data directly
+        edited_data = st.data_editor(existing_data)
+
+        if st.button("Save Changes"):
+            # Update the original dataset with the edited data
+            update_google_sheet(conn, edited_data)
+            st.success("Data updated successfully!")
+    else:
+        st.info("No entries found.")
 
 # Main Content
 def main_content():
@@ -232,7 +254,7 @@ def main_content():
     conn = st.connection("gsheets", type=GSheetsConnection, ttl=5)  # Connect to google sheets
     existing_data = fetch_existing_data(conn)  # Initially get all of the current data from the sheet
     
-    tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["✍️ Enter New Applicant","🔎 Search","📑 History","📈 Analytics","💬 Feedback","🛠️ Utilities"])
+    tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["✍️ Enter New Applicant","🔎 Search","📑 History","📈 Analytics","💬 Feedback","✏️ Edit Data", "🛠️ Utilities"])
    # Enter Applicant Expander
     with tab1:
         # Display form for entering new applicant information
@@ -262,6 +284,7 @@ def main_content():
                 educational_attainment = st.text_area(label="Educational Attainment")
                 csc_eligibility = st.text_area(label="CSC Eligibility", help="Leave blank if N/A")
 
+            
             st.divider()
             # Submit data button    
             submit_button = st.form_submit_button(label="Submit Data", type="primary")
@@ -387,7 +410,7 @@ def main_content():
         if searchtype == None:
             st.info("Please select an option.")
             
-    # History Expander
+    # History tab
     with tab3:
         show_history_page()
         # Link to open the google sheet
@@ -418,9 +441,13 @@ def main_content():
                     }
                     update_feedback_google_sheet(conn, pd.DataFrame(feedback_data))
                     st.success("Feedback Submitted Successfully.")
-
-    # Utility Functions Expander
+    
+    # Edit data tab
     with tab6:
+        edit_data()
+
+    # Utility Functions Tab
+    with tab7:
         c1, c2 = st.columns(2)
         with c1:
             # Refresh connection button
@@ -436,7 +463,9 @@ def main_content():
             # Open Google Sheet button
             st.link_button(label="Open Google Sheet", help="Open the Google Sheet", type="primary", url="https://docs.google.com/spreadsheets/d/1hmxu-9cIt3X8IP3OhhZRjJt_NHHqQSzjwqcEOvLadHw")
             st.link_button(label="Documentation", help="Open Documentation", type="primary", url="https://docs.google.com/document/d/1z7xYV0r2Q0subw_HNILCXDTKl_uNttK3Nztw3ttJkd8/edit?usp=sharing")
-   
+    
+    
+
 # Hans Content
 def hans_content():
     st.write(f"Welcome, {st.session_state['user']}.")
