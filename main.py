@@ -243,7 +243,7 @@ def edit_data():
 def main_content():
    
     st.title("Applicant Management System")
-    st.write(f"Welcome, {st.session_state['user']}.")
+    st.write(f"👋 Welcome, {st.session_state['user']}. 👋")
     # Logout button
     logout_button = st.button(label="Log out", type='primary')
     if logout_button:
