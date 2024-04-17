@@ -384,8 +384,9 @@ def main_content():
                 else:
                     st.info(f"No results found for year {year_input}")
         
-        else:
+        if searchtype == None:
             st.info("Please select an option.")
+            
     # History Expander
     with tab3:
         show_history_page()
