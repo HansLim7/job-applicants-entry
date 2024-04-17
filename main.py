@@ -449,7 +449,7 @@ def main_content():
     # Edit data tab
     with tab6:
         edit_data()
-        refr = st.button(label="Refresh")
+        refr = st.button(label="Refresh",key="rrrr")
         if refr:
             st.rerun()
 
