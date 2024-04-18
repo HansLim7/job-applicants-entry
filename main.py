@@ -243,7 +243,8 @@ def edit_data():
         # Allow editing of all data directly
         edited_data = st.data_editor(existing_data)
 
-        if st.button("Save Changes"):
+        save_button = st.button(label="Save and Update", help="Save changes and update data.",type='primary')
+        if save_button:
             # Update the original dataset with the edited data
             update_google_sheet(conn, edited_data)
             st.success("Data updated successfully!")
@@ -471,9 +472,6 @@ def main_content():
         entered_number = st.number_input("Enter 6-digit Number", max_value=999999, step=1)
         if entered_number == st.session_state.auth_number:
             edit_data()
-            refr = st.button(label="Refresh",key="rrrr")
-            if refr:
-                st.rerun()
         elif entered_number != 0:
             st.error("Incorrect code.")
 
