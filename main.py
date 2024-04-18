@@ -283,7 +283,7 @@ def main_content():
             with col1: # Left column
                 date = st.date_input(label="Date*", help="Select Date.", format="MM/DD/YYYY")
                 name = st.text_input(label="Name of Applicant*", help="Full Name")
-                desired_position = st.text_input(label="Desired Position", help="'Any Vacant Position' if not provided.")
+                desired_position = st.text_input(label="Desired Position", help="'ANY VACANT POSITION' if not provided.", autocomplete="ANY VACANT POSITION")
                 address = st.text_input(label="Address")
                 birthday_or_age = st.text_input(label="Date of Birth or Age", help="Enter Birthday in MM/DD/YYYY format or Age directly", placeholder="Enter date of birth (mm/dd/yyy) or age")
                 gender = st.selectbox(label="Gender", options=["MALE", "FEMALE", "OTHER"], index=None, placeholder="Select Gender")
@@ -292,7 +292,7 @@ def main_content():
             with col2: # Right column
                 date_submitted = st.date_input(label="Date Submitted*", help="Select Date Submitted", value=None, format="MM/DD/YYYY")
                 contact_number = st.text_input(label="Contact Number", help="Numeric only", max_chars=11)
-                forwarded_from = st.text_input(label="Forwarded From", help="CHRMO")
+                forwarded_from = st.text_input(label="Forwarded From", help="CHRMO", autocomplete = "CHRMO")
                 educational_attainment = st.text_area(label="Educational Attainment")
                 csc_eligibility = st.text_area(label="CSC Eligibility", help="Leave blank if N/A")
 
