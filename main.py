@@ -228,7 +228,6 @@ def show_applicants_chart(existing_data):
     st.plotly_chart(fig)
 
 def edit_data():
-    st.title("Edit Existing Data")
     conn = st.connection("gsheets", type=GSheetsConnection, ttl=5)
     if conn is None:
         st.error("Failed to establish Google Sheets connection.")
