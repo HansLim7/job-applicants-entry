@@ -170,7 +170,8 @@ def parse_date(date_str):
             return None
     except ValueError:
         return None
-    
+
+                        
 # Arrage the new data into a dataframe
 def create_applicant_dataframe(date, date_submitted, name, contact_number, desired_position, forwarded_from,
                                address, educational_attainment, csc_eligibility, birthday_or_age, gender, current_pos, online_submission):
@@ -266,7 +267,7 @@ def main_content():
     existing_data = fetch_existing_data(conn)  # Initially get all of the current data from the sheet
     
     tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["✍️ Enter New Applicant","🔎 Search","📑 History","📈 Analytics","💬 Feedback","✏️ Edit Data", "🛠️ Utilities"])
-   # Enter Applicant Expander
+   # Enter Applicant Tab
     with tab1:
         # Display form for entering new applicant information
         with st.form(key="Applicants", clear_on_submit=True, border=True):
