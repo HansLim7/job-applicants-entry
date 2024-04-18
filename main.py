@@ -251,6 +251,7 @@ def edit_data():
             time.sleep(3)
             st.rerun()
 
+
     else:
         st.info("No entries found.")
     
@@ -469,11 +470,19 @@ def main_content():
         st.write(f"Please enter the following 6-digit code to unlock edit data functionality: **{st.session_state.auth_number}**")
         
         # Input field for user-entered number
-        entered_number = st.number_input("Enter 6-digit Number", max_value=999999, step=1)
+        entered_number = st.number_input("Enter 6-digit Number",value=None, max_value=999999, step=1)
         if entered_number == st.session_state.auth_number:
             edit_data()
-        elif entered_number != 0:
-            st.error("Incorrect code.")
+            if st.button("Finished Editing"):
+                del st.session_state.auth_number
+                st.rerun()
+
+        elif entered_number == None:
+            st.error("Please enter a 6-digit code.")
+        
+        else:
+            st.error("Incorrect code")
+        
 
     # Utility Functions Tab
     with tab7:
