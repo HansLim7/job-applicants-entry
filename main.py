@@ -85,17 +85,24 @@ def show_login_page():
             st.rerun()
 
 
-# Authentication function
 def authenticate(username, password):
-    # Users here
-    if username == "CHRMO" and password == "1234":
+    user1_username = st.secrets["user1_username"]
+    user1_password = st.secrets["user1_password"]
+
+    if username == user1_username and password == user1_password:
         return True
-    elif username == "Hans" and password == "Lim":
+
+    user2_username = st.secrets["user2_username"]
+    user2_password = st.secrets["user2_password"]
+    if username == user2_username and password == user2_password:
         return True
-    elif username == "test" and password == "abcdef":
+
+    user3_username = st.secrets["user3_username"]
+    user3_password = st.secrets["user3_password"]
+    if username == user3_username and password == user3_password:
         return True
-    else:
-        return False
+
+    return False
 
 # Gather the last 10 entries in the google sheet
 def fetch_last_ten_entries(conn, filter_option="All"):
