@@ -22,6 +22,9 @@ import re
 # Import Plotly for visualization
 import plotly.express as px
 
+# Import random for random number generator
+import random
+
 # Set page configurations here
 st.set_page_config(
     page_title="CHRMO-AMS",
@@ -456,10 +459,23 @@ def main_content():
     
     # Edit data tab
     with tab6:
-        edit_data()
-        refr = st.button(label="Refresh",key="rrrr")
-        if refr:
-            st.rerun()
+        st.title("Edit Existing Data")
+    
+        # Generate random 6-digit number for authentication or retrieve from session state
+        if "auth_number" not in st.session_state:
+            st.session_state.auth_number = random.randint(100000, 999999)
+        
+        st.write(f"Please enter the following 6-digit code to unlock edit data functionality: **{st.session_state.auth_number}**")
+        
+        # Input field for user-entered number
+        entered_number = st.number_input("Enter 6-digit Number", max_value=999999, step=1)
+        if entered_number == st.session_state.auth_number:
+            edit_data()
+            refr = st.button(label="Refresh",key="rrrr")
+            if refr:
+                st.rerun()
+        elif entered_number != 0:
+            st.error("Incorrect code.")
 
     # Utility Functions Tab
     with tab7:
