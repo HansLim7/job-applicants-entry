@@ -278,6 +278,7 @@ def main_content():
     tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["✍️ Enter New Applicant","🔎 Search","📑 History","📈 Analytics","💬 Feedback","✏️ Edit Data", "🛠️ Utilities"])
    # Enter Applicant Tab
     with tab1:
+        c = True
         # Display form for entering new applicant information
         with st.form(key="Applicants", clear_on_submit=True, border=True):
             st.markdown('**Fields marked with ( * ) are Required.**')
@@ -305,10 +306,16 @@ def main_content():
                 educational_attainment = st.text_area(label="Educational Attainment")
                 csc_eligibility = st.text_area(label="CSC Eligibility", help="Leave blank if N/A")
 
+            if st.checkbox("Confirm entry"):
+                c = False  # Enable Button
+                st.rerun()
+            else:
+                c = True  # Disable Button
+                st.rerun()
             
             st.divider()
             # Submit data button    
-            submit_button = st.form_submit_button(label="Submit Data", type="primary")
+            submit_button = st.form_submit_button(label="Submit Data", type="primary", disabled=c)
             if submit_button:
                 if not all([date, date_submitted, name]):  # Check required fields
                     st.error("Please fill in all required fields.")
