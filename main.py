@@ -247,7 +247,7 @@ def edit_data():
             # Update the original dataset with the edited data
             update_google_sheet(conn, edited_data)
             st.success("Data updated successfully!")
-            time.sleep(1)
+            time.sleep(3)
             st.rerun()
 
     else:
