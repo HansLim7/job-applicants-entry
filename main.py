@@ -237,6 +237,13 @@ def edit_data():
     if not existing_data.empty:
         existing_data = existing_data.copy()
         existing_data.loc[:, "CONTACT NUMBER"] = existing_data["CONTACT NUMBER"].astype(str).str.replace(',', '')
+        # Download button
+        csv = existing_data.to_csv(index=False)
+        b64 = base64.b64encode(csv.encode()).decode()
+        file_name = "CHRMO AMS DATA.csv"
+        href = f'<a href="data:file/csv;base64,{b64}" download="{file_name}">Download Data</a>'
+        st.markdown(href, unsafe_allow_html=True)
+
         st.write("Enter full screen at the top right of the table")
 
         # Allow editing of all data directly
@@ -249,8 +256,6 @@ def edit_data():
             st.success("Data updated successfully!")
             time.sleep(3)
             st.rerun()
-
-
     else:
         st.info("No entries found.")
     
