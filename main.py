@@ -305,17 +305,10 @@ def main_content():
                 forwarded_from = st.text_input(label="Forwarded From", help="CHRMO", autocomplete = "CHRMO")
                 educational_attainment = st.text_area(label="Educational Attainment")
                 csc_eligibility = st.text_area(label="CSC Eligibility", help="Leave blank if N/A")
-
-            if st.checkbox("Confirm entry"):
-                c = False  # Enable Button
-                st.rerun()
-            else:
-                c = True  # Disable Button
-                st.rerun()
             
             st.divider()
             # Submit data button    
-            submit_button = st.form_submit_button(label="Submit Data", type="primary", disabled=c)
+            submit_button = st.form_submit_button(label="Submit Data", type="primary")
             if submit_button:
                 if not all([date, date_submitted, name]):  # Check required fields
                     st.error("Please fill in all required fields.")
