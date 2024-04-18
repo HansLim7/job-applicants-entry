@@ -278,7 +278,6 @@ def main_content():
     tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["✍️ Enter New Applicant","🔎 Search","📑 History","📈 Analytics","💬 Feedback","✏️ Edit Data", "🛠️ Utilities"])
    # Enter Applicant Tab
     with tab1:
-        c = True
         # Display form for entering new applicant information
         with st.form(key="Applicants", clear_on_submit=True, border=True):
             st.markdown('**Fields marked with ( * ) are Required.**')
@@ -305,7 +304,7 @@ def main_content():
                 forwarded_from = st.text_input(label="Forwarded From", help="CHRMO", autocomplete = "CHRMO")
                 educational_attainment = st.text_area(label="Educational Attainment")
                 csc_eligibility = st.text_area(label="CSC Eligibility", help="Leave blank if N/A")
-            
+        
             st.divider()
             # Submit data button    
             submit_button = st.form_submit_button(label="Submit Data", type="primary")
@@ -324,7 +323,7 @@ def main_content():
                     st.success("Data Successfully Submitted.")
 
 
-    # Search 
+    # Search tab
     with tab2:
         searchtype = st.selectbox("Search by:",("Name","Date","Date Submitted","Year"), index=None)  # Search filters
         if searchtype == "Name":
@@ -437,11 +436,11 @@ def main_content():
         # Link to open the google sheet
         st.link_button(label="Open Google Sheet", help="Open the Google Sheet", type="primary", url="https://docs.google.com/spreadsheets/d/1hmxu-9cIt3X8IP3OhhZRjJt_NHHqQSzjwqcEOvLadHw")
 
-    # Analytics dataframe
+    # Analytics tab
     with tab4:
         show_applicants_chart(existing_data)
     
-    # Feedback Form
+    # Feedback tab
     with tab5:
         with st.form(key="BugFeed", clear_on_submit=True, border=True):
             st.title("Feedback Form")
