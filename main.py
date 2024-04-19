@@ -254,13 +254,19 @@ def edit_data():
         edited_data = st.data_editor(existing_data)
         st.write("You can delete an entry by highlighting a row and pressing the 'Delete' key on your keyboard.")
 
-        save_button = st.button(label="Update and Save", help="Update data and save changes.",type='primary')
-        if save_button:
-            # Update the original dataset with the edited data
-            update_google_sheet(conn, edited_data)
-            st.success("Data updated successfully!")
-            time.sleep(3)
-            st.rerun()
+        col1, col2 = st.columns(2)
+        with col1:
+            save_button = st.button(label="Update and Save", help="Update data and save changes.",type='primary',key="save")
+            if save_button:
+                # Update the original dataset with the edited data
+                update_google_sheet(conn, edited_data)
+                st.success("Data updated successfully!")
+                time.sleep(3)
+                st.rerun()
+        with col2:
+            if st.button("Finished Editing",key="finishedit"):
+                del st.session_state.auth_number
+                st.rerun()
     else:
         st.info("No entries found.")
     
@@ -269,9 +275,11 @@ def edit_data():
 def main_content():
    
     st.title("Applicant Management System")
-    st.write(f"👋 Welcome, {st.session_state['user']}. 👋")
+    column1, column2 = st.columns([2,4.7])
+    with column1:
+        st.write(f"👋 Welcome, **:orange[{st.session_state['user']}]**. 👋")
     # Logout button
-    logout_button = st.button(label="Log out", type='primary')
+    logout_button = st.button(label="**Log out**", type='primary')
     if logout_button:
         st.write("Logging Out...")
         del st.session_state["user"]
@@ -279,21 +287,22 @@ def main_content():
         st.rerun()
     conn = st.connection("gsheets", type=GSheetsConnection, ttl=5)  # Connect to google sheets
     if conn is None:
-        st.markdown(":red[Cannot connect to the Google Sheet.]")
+        with column2:
+            st.markdown("**:red[Cannot connect to the Google Sheet.]**")
         return
     else:
-        st.markdown(":green[Connected to the Google Sheet.]")
+        with column2:
+            st.markdown("**:green[Connected to the Google Sheet.]**")
         existing_data = fetch_existing_data(conn)  # Initially get all of the current data from the sheet
-        tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["✍️ Enter New Applicant","🔎 Search","📑 History","📈 Analytics","💬 Feedback","✏️ Edit Data", "🛠️ Utilities"])
+        tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["✍️ **Enter New Applicant**","🔎 **Search**","📑 **History**","📈 **Analytics**","💬 **Feedback**","✏️ **Edit Data**", "🛠️ **Utilities**"])
     # Enter Applicant Tab
         with tab1:
             # Display form for entering new applicant information
             with st.form(key="Applicants", clear_on_submit=True, border=True):
-                st.markdown(':red[**Fields marked with ( * ) are Required.**]')
-                st.markdown('Please use Caps Lock when entering info.')
+                st.markdown(':red[**Fields marked with ( * ) are required**], and please use **_Caps Lock_** when entering info.')
                 st.divider()
                 # Ask the user if the submission is online or not
-                online_submission = st.checkbox("Online Submission")
+                online_submission = st.checkbox("**Online Submission**")
                 
                 # Divide the form into two columns
                 col1, col2 = st.columns(2) 
@@ -313,10 +322,10 @@ def main_content():
                     forwarded_from = st.text_input(label="Forwarded From", help="CHRMO", autocomplete = "CHRMO")
                     educational_attainment = st.text_area(label="Educational Attainment")
                     csc_eligibility = st.text_area(label="CSC Eligibility", help="Leave blank if N/A")
-            
+
                 st.divider()
                 # Submit data button    
-                submit_button = st.form_submit_button(label="Submit Data", type="primary")
+                submit_button = st.form_submit_button(label="**Submit Data**", type="primary")
                 if submit_button:
                     if not all([date, date_submitted, name]):  # Check required fields
                         st.error("Please fill in all required fields.")
@@ -485,9 +494,6 @@ def main_content():
             entered_number = st.number_input("Enter 6-digit Number",value=None, max_value=999999, step=1)
             if entered_number == st.session_state.auth_number:
                 edit_data()
-                if st.button("Finished Editing"):
-                    del st.session_state.auth_number
-                    st.rerun()
 
             elif entered_number == None:
                 st.error("Please enter a 6-digit code.")
