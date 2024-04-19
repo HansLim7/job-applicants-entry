@@ -279,7 +279,9 @@ def edit_data():
                 time.sleep(3)
                 st.rerun()
         with col2:
-            if st.button("Finished Editing",key="finishedit"):
+            if st.button("Finished Editing",key="finishedit", help="Close the editor."):
+                st.write(':violet[Closing Editor]')
+                time.sleep(1)
                 del st.session_state.auth_number
                 st.rerun()
     else:
