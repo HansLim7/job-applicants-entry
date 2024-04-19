@@ -280,16 +280,17 @@ def main_content():
         st.rerun()
     conn = st.connection("gsheets", type=GSheetsConnection, ttl=5)  # Connect to google sheets
     if conn is None:
-        st.error("Connection to Google Sheets failed.")
+        st.markdown(":red[Cannot connect to the Google Sheet.]")
         return
-    else: 
+    else:
+        st.markdown(":green[Connected to the Google Sheet.]")
         existing_data = fetch_existing_data(conn)  # Initially get all of the current data from the sheet
         tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["✍️ Enter New Applicant","🔎 Search","📑 History","📈 Analytics","💬 Feedback","✏️ Edit Data", "🛠️ Utilities"])
     # Enter Applicant Tab
         with tab1:
             # Display form for entering new applicant information
             with st.form(key="Applicants", clear_on_submit=True, border=True):
-                st.markdown('**Fields marked with ( * ) are Required.**')
+                st.markdown(':red[**Fields marked with ( * ) are Required.**]')
                 st.markdown('Please use Caps Lock when entering info.')
                 st.divider()
                 # Ask the user if the submission is online or not
@@ -479,7 +480,7 @@ def main_content():
             if "auth_number" not in st.session_state:
                 st.session_state.auth_number = random.randint(100000, 999999)
             
-            st.write(f"Please enter the following 6-digit code to unlock edit data functionality: **{st.session_state.auth_number}**")
+            st.write(f"Please enter the following 6-digit code to unlock edit data functionality: :violet[**{st.session_state.auth_number}**]")
             
             # Input field for user-entered number
             entered_number = st.number_input("Enter 6-digit Number",value=None, max_value=999999, step=1)
