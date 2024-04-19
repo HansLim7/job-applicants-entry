@@ -58,7 +58,8 @@ def main():
 
 # Login page
 def show_login_page():
-    st.sidebar.image('chrmo.png')
+    st.sidebar.header("Log in to continue")
+
     username = st.sidebar.text_input(label="Username")
     password = st.sidebar.text_input(label="Password", type="password")
     login_button = st.sidebar.button(label="Log in", type='primary')
@@ -80,8 +81,9 @@ def show_login_page():
         time.sleep(2)
         st.rerun()
     st.sidebar.divider()
-
-    st.image('chrmo2.png')
+    st.header("Welcome to the CHRMO applicant management system.")
+    st.markdown("To continue, please log in through the side bar.")
+    st.write("If you are on mobile, access the sidebar by tapping the top left arrow.")
 
     # Web application description expander
     about_button = st.sidebar.button(label="About this app", type ='secondary')
