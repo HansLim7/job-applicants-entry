@@ -43,9 +43,9 @@ def update_feedback_google_sheet(conn, data):
 def refresh():
     conn = st.connection("gsheets", type=GSheetsConnection, ttl=5)
     if conn is None:
-        st.error("Failed to establish Google Sheets connection.")
+        st.write(":red[Failed to establish Google Sheets connection.]")
     else:
-        st.success("Google Sheets connection refreshed successfully.")
+        st.write(":green[Google Sheets connection refreshed successfully.]")
         time.sleep(1)
         st.rerun()
 
@@ -93,7 +93,7 @@ def show_login_page():
         if st.sidebar.button("Hide Description"):
             st.rerun()
 
-
+# Authentication function
 def authenticate(username, password):
     user1_username = st.secrets["user1_username"]
     user1_password = st.secrets["user1_password"]
@@ -179,7 +179,6 @@ def parse_date(date_str):
             return None
     except ValueError:
         return None
-
                         
 # Arrage the new data into a dataframe
 def create_applicant_dataframe(date, date_submitted, name, contact_number, desired_position, forwarded_from,
@@ -251,11 +250,11 @@ def edit_data():
         st.markdown(href, unsafe_allow_html=True)
 
         st.write("Enter full screen at the top right of the table")
-
         # Allow editing of all data directly
         edited_data = st.data_editor(existing_data)
+        st.write("You can delete an entry by highlighting a row and pressing the 'Delete' key on your keyboard.")
 
-        save_button = st.button(label="Save and Update", help="Save changes and update data.",type='primary')
+        save_button = st.button(label="Update and Save", help="Update data and save changes.",type='primary')
         if save_button:
             # Update the original dataset with the edited data
             update_google_sheet(conn, edited_data)
@@ -499,6 +498,7 @@ def main_content():
 
         # Utility Functions Tab
         with tab7:
+            st.title("Utitlity Functions")
             c1, c2 = st.columns(2)
             with c1:
                 # Refresh connection button
@@ -555,7 +555,6 @@ def guest_content():
         return
     else:
         st.title("Hello Guest")
-
 
 # Main Page
 def show_main_page():
