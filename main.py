@@ -38,6 +38,19 @@ def update_google_sheet(conn, data):
 # Update google sheet function for feedback
 def update_feedback_google_sheet(conn, data):
     conn.update(worksheet="feedback", data=data)
+    # Function to fetch existing feedback data
+
+def fetch_existing_feedback(conn):
+    # Define the column names to retrieve from Google Sheets
+    columns = ["User", "Title", "Description", "Date Submitted"]
+
+    # Fetch data from Google Sheets with specified columns
+    existing_feedback = conn.read(worksheet="feedback", usecols=columns, ttl=5)
+    
+    # Drop any rows with all NaN values
+    existing_feedback = existing_feedback.dropna(how="all")
+    
+    return existing_feedback
 
 # Function to refresh connection with google sheets in case of connection issues
 def refresh():
@@ -145,7 +158,7 @@ def show_history_page():
     
     if st.button("Refresh"):
         st.rerun()
-    st.write(last_ten_entries)
+    st.dataframe(last_ten_entries)
         
 # Fetch existing data
 def fetch_existing_data(conn):
@@ -355,7 +368,7 @@ def main_content():
                         search_results_name = search_results_name.copy()
                         search_results_name.loc[:, "CONTACT NUMBER"] = search_results_name["CONTACT NUMBER"].astype(str).str.replace(',', '')
                         st.subheader(f"Search Results for '{search_name}'")
-                        st.write(search_results_name)
+                        st.dataframe(search_results_name)
                     else:
                         st.info(f"No results found for '{search_name}'")
             
@@ -382,7 +395,7 @@ def main_content():
                         # Add a new column for row numbering
                         search_results_date.insert(0, ' ', range(1, len(search_results_date) + 1))
                         st.subheader(f"Search Results for '{search_date.strftime('%m/%d/%Y')}'")
-                        st.write(search_results_date)
+                        st.dataframe(search_results_date)
 
                         # Download button
                         csv = search_results_date.to_csv(index=False)
@@ -413,7 +426,7 @@ def main_content():
                         # Add a new column for row numbering
                         search_results_datesub.insert(0, ' ', range(1, len(search_results_datesub) + 1))
                         st.subheader(f"Search Results for '{search_date_submitted.strftime('%m/%d/%Y')}'")
-                        st.write(search_results_datesub)
+                        st.dataframe(search_results_datesub)
 
                         # Download button
                         csv = search_results_datesub.to_csv(index=False)
@@ -436,7 +449,7 @@ def main_content():
                         search_results_year = search_results_year.copy()
                         search_results_year.loc[:, "CONTACT NUMBER"] = search_results_year["CONTACT NUMBER"].astype(str).str.replace(',', '')
                         st.subheader(f"Search Results for Year {year_input}")
-                        st.write(search_results_year)
+                        st.dataframe(search_results_year)
 
                         # Download button
                         csv = search_results_year.to_csv(index=False)
@@ -460,9 +473,9 @@ def main_content():
         with tab4:
             show_applicants_chart(existing_data)
         
-        # Feedback tab
         with tab5:
-            with st.form(key="BugFeed", clear_on_submit=True, border=True):
+            # Feedback form for new feedback submission
+            with st.form(key="NewFeedbackForm", clear_on_submit=True, border=True):
                 st.title("Feedback Form")
                 st.markdown('Report a bug / Request a Feature / Provide feedback here')
                 user = st.text_input(label="Author")
@@ -473,15 +486,36 @@ def main_content():
                     if title.strip() == "" or text.strip() == "":
                         st.error(":speech_balloon: Please fill in both Title and Description.")
                     else:
+                        # Create DataFrame for new feedback
                         feedback_data = {
                             "User" : [user],
                             "Title": [title],
                             "Description": [text],
                             "Date Submitted": [datetime.date.today().strftime("%m/%d/%Y")]
                         }
-                        update_feedback_google_sheet(conn, pd.DataFrame(feedback_data))
-                        st.success("Feedback Submitted Successfully.")
-        
+                        new_feedback_df = pd.DataFrame(feedback_data)
+                        
+                        # Fetch existing feedback data
+                        conn = st.connection("gsheets", type=GSheetsConnection, ttl=5)
+                        if conn is None:
+                            st.error("Failed to establish Google Sheets connection.")
+                        else:
+                            existing_feedback = fetch_existing_feedback(conn)
+                            if existing_feedback.empty:
+                                updated_feedback_df = new_feedback_df
+                            else:
+                                # Check column names and data types
+                                if set(new_feedback_df.columns) != set(existing_feedback.columns):
+                                    st.error("Column names of new feedback data do not match existing feedback data.")
+                                elif new_feedback_df.dtypes.to_dict() != existing_feedback.dtypes.to_dict():
+                                    st.error("Data types of new feedback data do not match existing feedback data.")
+                                else:
+                                    # Concatenate existing and new feedback DataFrames
+                                    updated_feedback_df = pd.concat([existing_feedback, new_feedback_df], ignore_index=True)
+                                
+                                # Update Google Sheet with concatenated DataFrame
+                                update_feedback_google_sheet(conn, updated_feedback_df)
+                                st.success("Feedback Submitted Successfully.")
         # Edit data tab
         with tab6:
             st.title("Edit Existing Data")
@@ -558,11 +592,20 @@ def guest_content():
         time.sleep(1)
         st.rerun()
     conn = st.connection("gsheets", type=GSheetsConnection, ttle=5)
+    existing_data = fetch_existing_data(conn)
     if conn is None:
         st.error("Failed to establish Google Sheets connection.")
         return
+    elif existing_data.empty:
+        st.info("No applicants data available.")
     else:
         st.title("Hello Guest")
+        existing_data = existing_data.copy()
+        existing_data.loc[:, "CONTACT NUMBER"] = existing_data["CONTACT NUMBER"].astype(str).str.replace(',', '')
+        st.dataframe(existing_data)
+        st.write("Guests can only view the data.")
+        
+    
 
 # Main Page
 def show_main_page():
