@@ -614,7 +614,8 @@ def show_main_page():
     if st.session_state["user"] == "Hans":
         hans_content()
     elif st.session_state["user"] == "Guest":
-        guest_content()
+        #guest_content()
+        st.write("guest features coming soon")
     else:
         main_content()      
 
