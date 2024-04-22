@@ -233,10 +233,9 @@ def create_applicant_dataframe(date, date_submitted, name, contact_number, desir
     }
     return pd.DataFrame(applicant_data)
 
-# Function to create a chart based on the number of applicants over time
 def show_applicants_chart(existing_data):
     # Convert the 'DATE' column to datetime format
-    existing_data['DATE'] = pd.to_datetime(existing_data['DATE'], errors='coerce')
+    existing_data['DATE'] = pd.to_datetime(existing_data['DATE'].str.replace(r'\s*\(ONLINE\)', '', regex=True), errors='coerce', format='%m/%d/%Y')
     
     # Remove any rows with missing dates
     existing_data.dropna(subset=['DATE'], inplace=True)
@@ -244,6 +243,7 @@ def show_applicants_chart(existing_data):
     # Group the data by date and count the number of applicants for each date
     applicants_count = existing_data.groupby('DATE').size().reset_index(name='Applicants')
     st.title("Number of Applicants Over Time")
+    
     # Create a line chart using Plotly
     fig = px.line(applicants_count, x='DATE', y='Applicants')
     fig.update_xaxes(title='Date')
@@ -251,7 +251,7 @@ def show_applicants_chart(existing_data):
     
     # Show the chart
     st.plotly_chart(fig)
-
+    
 def edit_data():
     conn = st.connection("gsheets", type=GSheetsConnection, ttl=5)
     if conn is None:
