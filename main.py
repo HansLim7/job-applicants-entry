@@ -87,12 +87,16 @@ def show_login_page():
         else:
 
             st.sidebar.warning("Please check your credentials and try again.")
-    guest_login_button = st.sidebar.button(label="Log in as Guest")
-    if guest_login_button:
-        st.session_state["user"] = "Guest"
-        st.sidebar.info("Logged in as Guest")
-        time.sleep(2)
-        st.rerun()
+
+    # GUEST LOGIN, COMING SOON.
+    
+    # guest_login_button = st.sidebar.button(label="Log in as Guest")
+    # if guest_login_button:
+    #    st.session_state["user"] = "Guest"
+    #    st.sidebar.info("Logged in as Guest")
+    #    time.sleep(2)
+    #    st.rerun()
+
     st.sidebar.divider()
     st.header("Welcome to the CHRMO applicant management system.")
     st.markdown("To continue, please log in through the side bar.")
