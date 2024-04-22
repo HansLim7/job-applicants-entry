@@ -102,19 +102,16 @@ def show_login_page():
     #    st.rerun()
 
     st.sidebar.divider()
-    st.header("Welcome to the CHRMO applicant management system.")
+    st.header("Welcome to the CHRMO Applicant Management System.")
     st.markdown("To continue, please log in through the side bar.")
     st.write("If you are on mobile, access the sidebar by tapping the top left arrow.")
 
     # Web application description expander
-    about_button = st.sidebar.button(label="About this app", type ='secondary')
-    if about_button:
-        st.sidebar.markdown('~ This web application is the CHRMO Applicant Management System (CHRMOAMS).')
-        st.sidebar.markdown('~ This web application is used to manage various information of job applicants in the CHRMO.')
-        st.sidebar.markdown('~ Developed for CHRMO Ozamiz')
-        st.sidebar.markdown('~ Developed by Hans Anthony T. Lim, BS Computer Engineering 4 @ La Salle University Ozamiz.')
-        if st.sidebar.button("Hide Description"):
-            st.rerun()
+    with st.expander("About this web application: "):
+        st.markdown('~ This web application is the CHRMO Applicant Management System (CHRMOAMS).')
+        st.markdown('~ This web application is used to manage various information of job applicants in the CHRMO.')
+        st.markdown('~ Developed for CHRMO Ozamiz')
+        st.markdown('~ Developed by Hans Anthony T. Lim, BS Computer Engineering 4 @ La Salle University Ozamiz.')
 
 # Authentication function
 def authenticate(username, password):
@@ -299,7 +296,7 @@ def edit_data():
 # Main Content
 def main_content():
    
-    st.title("Applicant Management System")
+    st.title("CHRMO Applicant Management System")
     st.write(f"👋 Welcome, **:orange[{st.session_state['user']}]**. 👋")
     # Logout button
     logout_button = st.button(label="**Log out**", type='primary')
@@ -482,12 +479,12 @@ def main_content():
         with tab5:
             # Feedback form for new feedback submission
             with st.form(key="NewFeedbackForm", clear_on_submit=True, border=True):
-                st.title("Feedback Form")
-                st.markdown('Report a bug / Request a Feature / Provide feedback here')
+                st.title("Contact the developer")
+                st.markdown('Report a bug / Request a Feature / Provide feedback here.')
                 user = st.text_input(label="Author")
                 title = st.text_input(label="Title")
                 text = st.text_area(label="Description")
-                submit = st.form_submit_button(label="Submit")
+                submit = st.form_submit_button(label="Submit", type="primary")
                 if submit:
                     if title.strip() == "" or text.strip() == "":
                         st.error(":speech_balloon: Please fill in both Title and Description.")
