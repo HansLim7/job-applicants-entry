@@ -615,12 +615,12 @@ def show_main_page():
         hans_content()
     elif st.session_state["user"] == "Guest":
         # guest_content()
-        st.write("Guest features soon")
         if st.button("Log out", type="primary"):
             st.write("Logging Out...")
             del st.session_state["user"]
             time.sleep(1)
             st.rerun()
+        st.write("guest features coming soon")
     else:
         main_content()      
 
