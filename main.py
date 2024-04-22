@@ -522,8 +522,8 @@ def main_content():
                                     update_feedback_google_sheet(conn, updated_feedback_df)
                                     st.success("Feedback Submitted Successfully.")
                                     # Send Email notification
-                                    sender_email = st.secrets["mail_username"]
-                                    receiver_email = st.secrets["mail_username"]
+                                    sender_email = st.secrets["mail_sender"]
+                                    receiver_email = st.secrets["mail_receiver"]
                                     password = st.secrets["mail_password"]
                                     subject = title
                                     body = text
