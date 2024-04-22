@@ -614,7 +614,13 @@ def show_main_page():
     if st.session_state["user"] == "Hans":
         hans_content()
     elif st.session_state["user"] == "Guest":
-        guest_content()
+        # guest_content()
+        st.write("Guest features soon")
+        if st.button("Log out", type="primary"):
+            st.write("Logging Out...")
+            del st.session_state["user"]
+            time.sleep(1)
+            st.rerun()
     else:
         main_content()      
 
