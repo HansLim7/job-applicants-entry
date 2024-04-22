@@ -25,10 +25,14 @@ import plotly.express as px
 # Import random for random number generator
 import random
 
+# Import smtp library for sending emails
+import smtplib
+
 # Set page configurations here
 st.set_page_config(
     page_title="CHRMO-AMS",
     page_icon=":black_nib:",
+    layout="wide"
 )
 
 # Update google sheet function
@@ -89,7 +93,7 @@ def show_login_page():
             st.sidebar.warning("Please check your credentials and try again.")
 
     # GUEST LOGIN, COMING SOON.
-    
+
     # guest_login_button = st.sidebar.button(label="Log in as Guest")
     # if guest_login_button:
     #    st.session_state["user"] = "Guest"
@@ -290,15 +294,13 @@ def edit_data():
                 st.rerun()
     else:
         st.info("No entries found.")
-    
+
 
 # Main Content
 def main_content():
    
     st.title("Applicant Management System")
-    column1, column2 = st.columns([2,4.7])
-    with column1:
-        st.write(f"👋 Welcome, **:orange[{st.session_state['user']}]**. 👋")
+    st.write(f"👋 Welcome, **:orange[{st.session_state['user']}]**. 👋")
     # Logout button
     logout_button = st.button(label="**Log out**", type='primary')
     if logout_button:
@@ -308,12 +310,10 @@ def main_content():
         st.rerun()
     conn = st.connection("gsheets", type=GSheetsConnection, ttl=5)  # Connect to google sheets
     if conn is None:
-        with column2:
-            st.markdown("**:red[Cannot connect to the Google Sheet.]**")
+        st.markdown("**:red[Cannot connect to the Google Sheet.]**")
         return
     else:
-        with column2:
-            st.markdown("**:green[Connected to the Google Sheet.]**")
+        st.markdown("**:green[Connected to the Google Sheet.]**")
         existing_data = fetch_existing_data(conn)  # Initially get all of the current data from the sheet
         tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["✍️ **Enter New Applicant**","🔎 **Search**","📑 **History**","📈 **Analytics**","💬 **Feedback**","✏️ **Edit Data**", "🛠️ **Utilities**"])
     # Enter Applicant Tab
@@ -518,10 +518,26 @@ def main_content():
                                 else:
                                     # Concatenate existing and new feedback DataFrames
                                     updated_feedback_df = pd.concat([existing_feedback, new_feedback_df], ignore_index=True)
-                                
-                                # Update Google Sheet with concatenated DataFrame
-                                update_feedback_google_sheet(conn, updated_feedback_df)
-                                st.success("Feedback Submitted Successfully.")
+                                    # Update Google Sheet with concatenated DataFrame
+                                    update_feedback_google_sheet(conn, updated_feedback_df)
+                                    st.success("Feedback Submitted Successfully.")
+                                    # Send Email notification
+                                    sender_email = st.secrets["mail_username"]
+                                    receiver_email = st.secrets["mail_username"]
+                                    password = st.secrets["mail_password"]
+                                    subject = title
+                                    body = text
+
+                                    smtp_server = "smtp.gmail.com"
+                                    smtp_port = 587
+                                    
+                                    message = f"Subject: {subject}\n\n{body}\n\nFrom: {user}"
+
+                                    with smtplib.SMTP(smtp_server, smtp_port) as server:
+                                        server.starttls()
+                                        server.login(sender_email, password)
+                                        server.sendmail(sender_email,receiver_email,message)
+                                        st.write("The developer has been notified of your feedback, thank you!")
         # Edit data tab
         with tab6:
             st.title("Edit Existing Data")
