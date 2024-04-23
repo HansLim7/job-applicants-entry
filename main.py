@@ -361,7 +361,7 @@ def main_content():
 
         # Search tab
         with tab2:
-            searchtype = st.selectbox("Search by:",("Name","Date","Date Submitted","Year"), index=None)  # Search filters
+            searchtype = st.selectbox("Search by:",("Name","Date","Date Submitted","Desired Position","Year"), index=None)  # Search filters
             if searchtype == "Name":
                 search_name = st.text_input("Enter name (press 'enter' to search)", key="name_input")
                 if search_name:
@@ -439,6 +439,19 @@ def main_content():
                         st.markdown(href, unsafe_allow_html=True)
                     else:
                         st.info(f"No results found for '{search_date_submitted.strftime('%m/%d/%Y')}'")
+
+            if searchtype == "Desired Position":
+                unique_desired_positions = sorted(existing_data["DESIRED POSITION"].astype(str).unique().tolist())
+                desired_position_input = st.selectbox("Select Desired Position", unique_desired_positions)
+                if desired_position_input:
+                    search_results_position = existing_data[existing_data["DESIRED POSITION"].astype(str) == desired_position_input]
+                    if not search_results_position.empty:
+                        search_results_position = search_results_position.copy()
+                        search_results_position.loc[:, "CONTACT NUMBER"] = search_results_position["CONTACT NUMBER"].astype(str).str.replace(',', '')
+                        st.subheader(f"Search Results for Desired Position '{desired_position_input}'")
+                        st.dataframe(search_results_position)
+                    else:
+                        st.info(f"No results found for Desired Position '{desired_position_input}'")
 
             if searchtype == "Year":
                 year_input = st.number_input("Search by Year", min_value=2023, max_value=2050, value=2023, step=1)
