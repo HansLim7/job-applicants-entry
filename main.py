@@ -450,6 +450,13 @@ def main_content():
                         search_results_position.loc[:, "CONTACT NUMBER"] = search_results_position["CONTACT NUMBER"].astype(str).str.replace(',', '')
                         st.subheader(f"Search Results for Desired Position '{desired_position_input}'")
                         st.dataframe(search_results_position)
+
+                        # Download button
+                        csv = search_results_position.to_csv(index=False)
+                        b64 = base64.b64encode(csv.encode()).decode()
+                        file_name = f"{desired_position_input}.csv"
+                        href = f'<a href="data:file/csv;base64,{b64}" download="{file_name}">Download</a>'
+                        st.markdown(href, unsafe_allow_html=True)
                     else:
                         st.info(f"No results found for Desired Position '{desired_position_input}'")
 
