@@ -442,7 +442,7 @@ def main_content():
 
             if searchtype == "Desired Position":
                 unique_desired_positions = sorted(existing_data["DESIRED POSITION"].astype(str).unique().tolist())
-                desired_position_input = st.selectbox("Select Desired Position", unique_desired_positions)
+                desired_position_input = st.selectbox("Select Desired Position", unique_desired_positions, index = None)
                 if desired_position_input:
                     search_results_position = existing_data[existing_data["DESIRED POSITION"].astype(str) == desired_position_input]
                     if not search_results_position.empty:
