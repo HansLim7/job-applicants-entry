@@ -137,11 +137,6 @@ def authenticate(username, password):
     if username == user2_username and password == user2_password:
         return True
 
-    user3_username = st.secrets["user3_username"]
-    user3_password = st.secrets["user3_password"]
-    if username == user3_username and password == user3_password:
-        return True
-
     return False
 
 # Gather the last 10 entries in the google sheet
