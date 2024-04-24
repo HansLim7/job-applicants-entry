@@ -435,8 +435,8 @@ def main_content():
 
             if searchtype == "Date Submitted":  # Search by date submitted
 
-                start_date_submitted = st.date_input("Start Date Submitted", key="start_date_sub_input", value=None, format="MM/DD/YYYY")
-                end_date_submitted = st.date_input("End Date Submitted", key="end_date_sub_input", value=None, format="MM/DD/YYYY")
+                start_date_submitted = st.date_input("Start Date", key="start_date_sub_input", value=None, format="MM/DD/YYYY")
+                end_date_submitted = st.date_input("End Date", key="end_date_sub_input", value=None, format="MM/DD/YYYY")
 
                 if start_date_submitted and end_date_submitted:
                     # Convert the start and end dates to datetime objects
@@ -454,10 +454,6 @@ def main_content():
                     if not search_results_datesub.empty:
                         # Create a copy of the DataFrame before modifying it
                         search_results_datesub = search_results_datesub.copy()
-                        # Remove the last two columns
-                        search_results_datesub = search_results_datesub.iloc[:, :-3]
-                        # Add a new column for REMARKS with default value
-                        search_results_datesub["REMARKS"] = ""
                         # Convert 'CONTACT NUMBER' column to string and then replace commas
                         search_results_datesub.loc[:, "CONTACT NUMBER"] = search_results_datesub["CONTACT NUMBER"].astype(str).str.replace(',', '')
                         # Add a new column for row numbering
