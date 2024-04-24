@@ -304,6 +304,25 @@ def main_content():
    
     st.title("CHRMO Applicant Management System")
     st.write(f"👋 Welcome, **:orange[{st.session_state['user']}]**. 👋")
+    # Utility Functions Tab
+    with st.popover("🛠️ Utilities"):
+        st.title("Utitlity Functions")
+        st.divider()
+        c1, c2 = st.columns(2)
+        with c1:
+            # Refresh connection button
+            refresh_button = st.button(label="Refresh Connection to Google Sheets", type="secondary", help="Refresh if there are problems connecting to Google Sheets or connection is closed.", key="refresh_button")
+            if refresh_button:
+                refresh()
+                    
+            # Refresh web application button
+            ref_button = st.button(label="Refresh Web Application", help="Refresh the web application to update data")
+            if ref_button:
+                st.rerun()
+        with c2:
+            # Open Google Sheet button
+            st.link_button(label="Open Google Sheet", help="Open the Google Sheet", type="primary", url="https://docs.google.com/spreadsheets/d/1hmxu-9cIt3X8IP3OhhZRjJt_NHHqQSzjwqcEOvLadHw")
+            st.link_button(label="Documentation", help="Open Documentation", type="primary", url="https://docs.google.com/document/d/1z7xYV0r2Q0subw_HNILCXDTKl_uNttK3Nztw3ttJkd8/edit?usp=sharing")
     # Logout button
     logout_button = st.button(label="**Log out**", type='primary')
     if logout_button:
@@ -364,7 +383,6 @@ def main_content():
                         update_google_sheet(conn, updated_df)
                         st.success("Data Successfully Submitted.")
 
-
         # Search tab
         with tab2:
             searchtype = st.selectbox("Search by:",("Name","Date","Date Submitted","Desired Position","Year"), index=None)  # Search filters
@@ -380,7 +398,7 @@ def main_content():
                         st.dataframe(search_results_name)
                     else:
                         st.info(f"No results found for '{search_name}'")
-            
+             
             if searchtype == "Date":  # Search by Date
                 search_date = st.date_input("Select a date", key="date_input")
                 if search_date:
@@ -594,27 +612,6 @@ def main_content():
             else:
                 st.error("Incorrect code")
             
-
-    # Utility Functions Tab
-    with st.popover("🛠️ Utilities"):
-        st.title("Utitlity Functions")
-        st.divider()
-        c1, c2 = st.columns(2)
-        with c1:
-            # Refresh connection button
-            refresh_button = st.button(label="Refresh Connection to Google Sheets", type="secondary", help="Refresh if there are problems connecting to Google Sheets or connection is closed.", key="refresh_button")
-            if refresh_button:
-                refresh()
-                    
-            # Refresh web application button
-            ref_button = st.button(label="Refresh Web Application", help="Refresh the web application to update data")
-            if ref_button:
-                st.rerun()
-        with c2:
-            # Open Google Sheet button
-            st.link_button(label="Open Google Sheet", help="Open the Google Sheet", type="primary", url="https://docs.google.com/spreadsheets/d/1hmxu-9cIt3X8IP3OhhZRjJt_NHHqQSzjwqcEOvLadHw")
-            st.link_button(label="Documentation", help="Open Documentation", type="primary", url="https://docs.google.com/document/d/1z7xYV0r2Q0subw_HNILCXDTKl_uNttK3Nztw3ttJkd8/edit?usp=sharing")
-            
 # Hans Content
 def hans_content():
     st.write(f"Welcome, {st.session_state['user']}.")
@@ -662,8 +659,6 @@ def guest_content():
         existing_data.loc[:, "CONTACT NUMBER"] = existing_data["CONTACT NUMBER"].astype(str).str.replace(',', '')
         st.dataframe(existing_data)
         st.write("Guests can only view the data.")
-        
-    
 
 # Main Page
 def show_main_page():
