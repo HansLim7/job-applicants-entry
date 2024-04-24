@@ -5,6 +5,8 @@
 # Streamlit library for web app creation and gsheets connection
 import streamlit as st
 from streamlit_gsheets import GSheetsConnection
+from streamlit_lottie import st_lottie
+import requests
 
 # Pandas library for data handling
 import pandas as pd
@@ -34,6 +36,14 @@ st.set_page_config(
     page_icon=":black_nib:",
     layout="wide"
 )
+#load animation
+def load_lottieurl(url: str):
+    r = requests.get(url)
+    if r.status_code != 200:
+        return None
+    return r.json()
+
+lottie_welcome = load_lottieurl("https://lottie.host/7913451d-e172-44eb-af0a-4292089b88c8/Ougc51Felq.json")
 
 # Update google sheet function
 def update_google_sheet(conn, data):
@@ -102,6 +112,7 @@ def show_login_page():
     #    st.rerun()
 
     st.sidebar.divider()
+    st_lottie(lottie_welcome,loop=True,quality='high',width=700,height=500)
     st.header("Welcome to the CHRMO Applicant Management System.")
     st.markdown("To continue, please log in through the side bar.")
     st.write("If you are on mobile, access the sidebar by tapping the top left arrow.")
