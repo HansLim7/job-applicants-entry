@@ -417,54 +417,66 @@ def main_content():
 
             if searchtype == "Date Submitted":  # Search by date submitted
 
-                search_date_submitted = st.date_input("Select a date of submission", key="date_sub_input")
-                if search_date_submitted:
-                    filter_options_sub = st.radio("Filter:", ("All", "Walk-in", "Online"), index=0, key="datesubfilter")
-                    if filter_options_sub == "All":
-                        search_results_datesub = existing_data[existing_data["DATE SUBMITTED"].str.contains(search_date_submitted.strftime('%m/%d/%Y'), case=False, na=False)]
-                    elif filter_options_sub == "Walk-in":
-                        search_results_datesub = existing_data[(existing_data["DATE SUBMITTED"].str.contains(search_date_submitted.strftime('%m/%d/%Y'), case=False, na=False)) & (~existing_data["DATE SUBMITTED"].str.contains("ONLINE"))]
-                    else:
-                        search_results_datesub = existing_data[(existing_data["DATE SUBMITTED"].str.contains(search_date_submitted.strftime('%m/%d/%Y'), case=False, na=False)) & (existing_data["DATE SUBMITTED"].str.contains("ONLINE"))]
-                    
+                start_date_submitted = st.date_input("Start Date Submitted", key="start_date_sub_input", value=None, format="MM/DD/YYYY")
+                end_date_submitted = st.date_input("End Date Submitted", key="end_date_sub_input", value=None, format="MM/DD/YYYY")
+
+                if start_date_submitted and end_date_submitted:
+                    # Convert the start and end dates to datetime objects
+                    start_date_datetime = datetime.datetime.combine(start_date_submitted, datetime.datetime.min.time())
+                    end_date_datetime = datetime.datetime.combine(end_date_submitted, datetime.datetime.max.time())
+
+                    # Convert the 'DATE SUBMITTED' column to datetime format
+                    existing_data['DATE SUBMITTED'] = pd.to_datetime(existing_data['DATE SUBMITTED'], format='%m/%d/%Y', errors='coerce')
+
+                    # Remove any rows with missing dates
+                    existing_data.dropna(subset=['DATE SUBMITTED'], inplace=True)
+
+                    search_results_datesub = existing_data[(existing_data['DATE SUBMITTED'] >= start_date_datetime) & (existing_data['DATE SUBMITTED'] <= end_date_datetime)]
+
                     if not search_results_datesub.empty:
                         # Create a copy of the DataFrame before modifying it
                         search_results_datesub = search_results_datesub.copy()
+                        # Remove the last two columns
+                        search_results_datesub = search_results_datesub.iloc[:, :-3]
+                        # Add a new column for REMARKS with default value
+                        search_results_datesub["REMARKS"] = ""
                         # Convert 'CONTACT NUMBER' column to string and then replace commas
                         search_results_datesub.loc[:, "CONTACT NUMBER"] = search_results_datesub["CONTACT NUMBER"].astype(str).str.replace(',', '')
                         # Add a new column for row numbering
                         search_results_datesub.insert(0, ' ', range(1, len(search_results_datesub) + 1))
-                        st.subheader(f"Search Results for '{search_date_submitted.strftime('%m/%d/%Y')}'")
+                        st.subheader(f"Search Results for Date Submitted between '{start_date_submitted.strftime('%m/%d/%Y')}' and '{end_date_submitted.strftime('%m/%d/%Y')}'")
                         st.dataframe(search_results_datesub)
 
                         # Download button
                         csv = search_results_datesub.to_csv(index=False)
                         b64 = base64.b64encode(csv.encode()).decode()
-                        file_name = f"{search_date_submitted.strftime('%m-%d-%Y')}.csv"
+                        file_name = f"date_submitted_{start_date_submitted.strftime('%m-%d-%Y')}_to_{end_date_submitted.strftime('%m-%d-%Y')}.csv"
                         href = f'<a href="data:file/csv;base64,{b64}" download="{file_name}">Download Report</a>'
                         st.markdown(href, unsafe_allow_html=True)
                     else:
-                        st.info(f"No results found for '{search_date_submitted.strftime('%m/%d/%Y')}'")
+                        st.info(f"No results found for Date Submitted between '{start_date_submitted.strftime('%m/%d/%Y')}' and '{end_date_submitted.strftime('%m/%d/%Y')}'")
+                else:
+                    st.info("Please enter a date range.")
 
-            if searchtype == "Desired Position":
-                unique_desired_positions = sorted(existing_data["DESIRED POSITION"].astype(str).unique().tolist())
-                desired_position_input = st.selectbox("Select Desired Position", unique_desired_positions, index = None)
-                if desired_position_input:
-                    search_results_position = existing_data[existing_data["DESIRED POSITION"].astype(str) == desired_position_input]
-                    if not search_results_position.empty:
-                        search_results_position = search_results_position.copy()
-                        search_results_position.loc[:, "CONTACT NUMBER"] = search_results_position["CONTACT NUMBER"].astype(str).str.replace(',', '')
-                        st.subheader(f"Search Results for Desired Position '{desired_position_input}'")
-                        st.dataframe(search_results_position)
+                if searchtype == "Desired Position":
+                    unique_desired_positions = sorted(existing_data["DESIRED POSITION"].astype(str).unique().tolist())
+                    desired_position_input = st.selectbox("Select Desired Position", unique_desired_positions, index = None)
+                    if desired_position_input:
+                        search_results_position = existing_data[existing_data["DESIRED POSITION"].astype(str) == desired_position_input]
+                        if not search_results_position.empty:
+                            search_results_position = search_results_position.copy()
+                            search_results_position.loc[:, "CONTACT NUMBER"] = search_results_position["CONTACT NUMBER"].astype(str).str.replace(',', '')
+                            st.subheader(f"Search Results for Desired Position '{desired_position_input}'")
+                            st.dataframe(search_results_position)
 
-                        # Download button
-                        csv = search_results_position.to_csv(index=False)
-                        b64 = base64.b64encode(csv.encode()).decode()
-                        file_name = f"{desired_position_input}.csv"
-                        href = f'<a href="data:file/csv;base64,{b64}" download="{file_name}">Download</a>'
-                        st.markdown(href, unsafe_allow_html=True)
-                    else:
-                        st.info(f"No results found for Desired Position '{desired_position_input}'")
+                            # Download button
+                            csv = search_results_position.to_csv(index=False)
+                            b64 = base64.b64encode(csv.encode()).decode()
+                            file_name = f"{desired_position_input}.csv"
+                            href = f'<a href="data:file/csv;base64,{b64}" download="{file_name}">Download</a>'
+                            st.markdown(href, unsafe_allow_html=True)
+                        else:
+                            st.info(f"No results found for Desired Position '{desired_position_input}'")
 
             if searchtype == "Year":
                 year_input = st.number_input("Search by Year", min_value=2023, max_value=2050, value=2023, step=1)
