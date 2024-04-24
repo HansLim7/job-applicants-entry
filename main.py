@@ -318,7 +318,7 @@ def main_content():
     else:
         st.markdown("**:green[Connected to the Google Sheet.]**")
         existing_data = fetch_existing_data(conn)  # Initially get all of the current data from the sheet
-        tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["✍️ **Enter New Applicant**","🔎 **Search**","📑 **History**","📈 **Analytics**","💬 **Feedback**","✏️ **Edit Data**", "🛠️ **Utilities**"])
+        tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["✍️ **Enter New Applicant**","🔎 **Search**","📑 **History**","📈 **Analytics**","💬 **Feedback**","✏️ **Edit Data**"])
     # Enter Applicant Tab
         with tab1:
             # Display form for entering new applicant information
@@ -583,24 +583,25 @@ def main_content():
                 st.error("Incorrect code")
             
 
-        # Utility Functions Tab
-        with tab7:
-            st.title("Utitlity Functions")
-            c1, c2 = st.columns(2)
-            with c1:
-                # Refresh connection button
-                refresh_button = st.button(label="Refresh Connection to Google Sheets", type="secondary", help="Refresh if there are problems connecting to Google Sheets or connection is closed.", key="refresh_button")
-                if refresh_button:
-                    refresh()
+    # Utility Functions Tab
+    with st.popover("🛠️ Utilities"):
+        st.title("Utitlity Functions")
+        st.divider()
+        c1, c2 = st.columns(2)
+        with c1:
+            # Refresh connection button
+            refresh_button = st.button(label="Refresh Connection to Google Sheets", type="secondary", help="Refresh if there are problems connecting to Google Sheets or connection is closed.", key="refresh_button")
+            if refresh_button:
+                refresh()
                     
-                # Refresh web application button
-                ref_button = st.button(label="Refresh Web Application", help="Refresh the web application to update data")
-                if ref_button:
-                    st.rerun()
-            with c2:
-                # Open Google Sheet button
-                st.link_button(label="Open Google Sheet", help="Open the Google Sheet", type="primary", url="https://docs.google.com/spreadsheets/d/1hmxu-9cIt3X8IP3OhhZRjJt_NHHqQSzjwqcEOvLadHw")
-                st.link_button(label="Documentation", help="Open Documentation", type="primary", url="https://docs.google.com/document/d/1z7xYV0r2Q0subw_HNILCXDTKl_uNttK3Nztw3ttJkd8/edit?usp=sharing")
+            # Refresh web application button
+            ref_button = st.button(label="Refresh Web Application", help="Refresh the web application to update data")
+            if ref_button:
+                st.rerun()
+        with c2:
+            # Open Google Sheet button
+            st.link_button(label="Open Google Sheet", help="Open the Google Sheet", type="primary", url="https://docs.google.com/spreadsheets/d/1hmxu-9cIt3X8IP3OhhZRjJt_NHHqQSzjwqcEOvLadHw")
+            st.link_button(label="Documentation", help="Open Documentation", type="primary", url="https://docs.google.com/document/d/1z7xYV0r2Q0subw_HNILCXDTKl_uNttK3Nztw3ttJkd8/edit?usp=sharing")
             
 # Hans Content
 def hans_content():
