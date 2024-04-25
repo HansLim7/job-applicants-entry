@@ -277,6 +277,20 @@ def show_applicants_chart(existing_data):
     
     # Show the bar chart
     st.plotly_chart(fig_bar_chart, use_container_width= True)
+
+    # Group the data by desired position and educational attainment and count the number of applicants for each combination
+    position_education_counts = existing_data.groupby(['DESIRED POSITION', 'EDUCATIONAL ATTAINMENT']).size().reset_index(name='Count')
+    
+    # Create a grouped bar chart using Plotly for relationship between desired position and educational attainments
+    fig_grouped_bar_chart = px.bar(position_education_counts, x='DESIRED POSITION', y='Count', color='EDUCATIONAL ATTAINMENT', barmode='group', title='Relationship between Desired Position and Educational Attainments')
+    fig_grouped_bar_chart.update_xaxes(title='Desired Position')
+    fig_grouped_bar_chart.update_yaxes(title='Number of Applicants')
+
+    # Increase the size of the chart
+    fig_grouped_bar_chart.update_layout(width=1500, height=600)
+    
+    # Show the grouped bar chart
+    st.plotly_chart(fig_grouped_bar_chart, use_container_width = True)
     
 def edit_data():
     conn = st.connection("gsheets", type=GSheetsConnection, ttl=5)
