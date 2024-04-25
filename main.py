@@ -362,7 +362,7 @@ def main_content():
                 with col2: # Right column
                     date_submitted = st.date_input(label="Date Submitted*", help="Select Date Submitted", value=None, format="MM/DD/YYYY")
                     contact_number = st.text_input(label="Contact Number", help="Numeric only", max_chars=11)
-                    forwarded_from = st.text_input(label="Forwarded From", help="CHRMO", autocomplete = "CHRMO")
+                    forwarded_from = st.text_input(label="Forwarded From", help="CHRMO", autocomplete = "CHRMO", value="CHRMO")
                     educational_attainment = st.text_area(label="Educational Attainment")
                     csc_eligibility = st.text_area(label="CSC Eligibility", help="Leave blank if N/A")
 
