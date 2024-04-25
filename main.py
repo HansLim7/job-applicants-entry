@@ -472,25 +472,25 @@ def main_content():
                 else:
                     st.info("Please enter a date range.")
 
-                if searchtype == "Desired Position":
-                    unique_desired_positions = sorted(existing_data["DESIRED POSITION"].astype(str).unique().tolist())
-                    desired_position_input = st.selectbox("Select Desired Position", unique_desired_positions, index = None)
-                    if desired_position_input:
-                        search_results_position = existing_data[existing_data["DESIRED POSITION"].astype(str) == desired_position_input]
-                        if not search_results_position.empty:
-                            search_results_position = search_results_position.copy()
-                            search_results_position.loc[:, "CONTACT NUMBER"] = search_results_position["CONTACT NUMBER"].astype(str).str.replace(',', '')
-                            st.subheader(f"Search Results for Desired Position '{desired_position_input}'")
-                            st.dataframe(search_results_position)
+            if searchtype == "Desired Position":
+                unique_desired_positions = sorted(existing_data["DESIRED POSITION"].astype(str).unique().tolist())
+                desired_position_input = st.selectbox("Select Desired Position", unique_desired_positions, index = None)
+                if desired_position_input:
+                    search_results_position = existing_data[existing_data["DESIRED POSITION"].astype(str) == desired_position_input]
+                    if not search_results_position.empty:
+                        search_results_position = search_results_position.copy()
+                        search_results_position.loc[:, "CONTACT NUMBER"] = search_results_position["CONTACT NUMBER"].astype(str).str.replace(',', '')
+                        st.subheader(f"Search Results for Desired Position '{desired_position_input}'")
+                        st.dataframe(search_results_position)
 
-                            # Download button
-                            csv = search_results_position.to_csv(index=False)
-                            b64 = base64.b64encode(csv.encode()).decode()
-                            file_name = f"{desired_position_input}.csv"
-                            href = f'<a href="data:file/csv;base64,{b64}" download="{file_name}">Download</a>'
-                            st.markdown(href, unsafe_allow_html=True)
-                        else:
-                            st.info(f"No results found for Desired Position '{desired_position_input}'")
+                        # Download button
+                        csv = search_results_position.to_csv(index=False)
+                        b64 = base64.b64encode(csv.encode()).decode()
+                        file_name = f"{desired_position_input}.csv"
+                        href = f'<a href="data:file/csv;base64,{b64}" download="{file_name}">Download</a>'
+                        st.markdown(href, unsafe_allow_html=True)
+                    else:
+                        st.info(f"No results found for Desired Position '{desired_position_input}'")
 
             if searchtype == "Year":
                 year_input = st.number_input("Search by Year", min_value=2023, max_value=2050, value=2023, step=1)
