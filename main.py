@@ -256,7 +256,27 @@ def show_applicants_chart(existing_data):
     fig.update_yaxes(title='Number of Applicants')
     
     # Show the chart
-    st.plotly_chart(fig)
+    st.plotly_chart(fig, use_container_width=True)
+
+    # Group the data by address and count the number of applicants for each address
+    address_counts = existing_data['ADDRESS'].value_counts()
+    
+    # Create a pie chart using Plotly for distribution of applicants by address
+    fig_pie_chart = px.pie(address_counts, values=address_counts.values, names=address_counts.index, title='Applicants Distribution by Address')
+    
+    # Show the pie chart
+    st.plotly_chart(fig_pie_chart, use_container_width=True)
+
+    # Group the data by desired position and count the number of applicants for each position
+    position_counts = existing_data['DESIRED POSITION'].value_counts()
+    
+    # Create a bar chart using Plotly for distribution of applicants by desired position
+    fig_bar_chart = px.bar(position_counts, x=position_counts.index, y=position_counts.values, title='Applicants Distribution by Desired Position')
+    fig_bar_chart.update_xaxes(title='Desired Position')
+    fig_bar_chart.update_yaxes(title='Number of Applicants')
+    
+    # Show the bar chart
+    st.plotly_chart(fig_bar_chart, use_container_width= True)
     
 def edit_data():
     conn = st.connection("gsheets", type=GSheetsConnection, ttl=5)
