@@ -169,7 +169,7 @@ def show_history_page():
     
     if st.button("Refresh"):
         st.rerun()
-    st.dataframe(last_ten_entries)
+    st.dataframe(last_ten_entries,use_container_width=True,hide_index=True)
         
 # Fetch existing data
 def fetch_existing_data(conn):
@@ -311,7 +311,7 @@ def edit_data():
 
         st.write("Enter full screen at the top right of the table")
         # Allow editing of all data directly
-        edited_data = st.data_editor(existing_data)
+        edited_data = st.data_editor(existing_data,use_container_width=True,hide_index=True)
         st.write("You can delete an entry by highlighting a row and pressing the 'Delete' key on your keyboard.")
 
         col1, col2 = st.columns(2)
@@ -429,7 +429,7 @@ def main_content():
                         search_results_name = search_results_name.copy()
                         search_results_name.loc[:, "CONTACT NUMBER"] = search_results_name["CONTACT NUMBER"].astype(str).str.replace(',', '')
                         st.subheader(f"Search Results for '{search_name}'")
-                        st.dataframe(search_results_name)
+                        st.dataframe(search_results_name,use_container_width=True,hide_index=True)
                     else:
                         st.info(f"No results found for '{search_name}'")
              
@@ -456,7 +456,7 @@ def main_content():
                         # Add a new column for row numbering
                         search_results_date.insert(0, ' ', range(1, len(search_results_date) + 1))
                         st.subheader(f"Search Results for '{search_date.strftime('%m/%d/%Y')}'")
-                        st.dataframe(search_results_date)
+                        st.dataframe(search_results_date,use_container_width=True,hide_index=True)
 
                         # Download button
                         csv = search_results_date.to_csv(index=False)
@@ -493,7 +493,7 @@ def main_content():
                         # Add a new column for row numbering
                         search_results_datesub.insert(0, ' ', range(1, len(search_results_datesub) + 1))
                         st.subheader(f"Search Results for Date Submitted between '{start_date_submitted.strftime('%m/%d/%Y')}' and '{end_date_submitted.strftime('%m/%d/%Y')}'")
-                        st.dataframe(search_results_datesub)
+                        st.dataframe(search_results_datesub,use_container_width=True,hide_index=True)
 
                         # Download button
                         csv = search_results_datesub.to_csv(index=False)
@@ -515,7 +515,7 @@ def main_content():
                         search_results_position = search_results_position.copy()
                         search_results_position.loc[:, "CONTACT NUMBER"] = search_results_position["CONTACT NUMBER"].astype(str).str.replace(',', '')
                         st.subheader(f"Search Results for Desired Position '{desired_position_input}'")
-                        st.dataframe(search_results_position)
+                        st.dataframe(search_results_position,use_container_width=True,hide_index=True)
 
                         # Download button
                         csv = search_results_position.to_csv(index=False)
@@ -538,7 +538,7 @@ def main_content():
                         search_results_year = search_results_year.copy()
                         search_results_year.loc[:, "CONTACT NUMBER"] = search_results_year["CONTACT NUMBER"].astype(str).str.replace(',', '')
                         st.subheader(f"Search Results for Year {year_input}")
-                        st.dataframe(search_results_year)
+                        st.dataframe(search_results_year,use_container_width=True,hide_index=True)
 
                         # Download button
                         csv = search_results_year.to_csv(index=False)
@@ -687,7 +687,7 @@ def guest_content():
         st.title("Hello Guest")
         existing_data = existing_data.copy()
         existing_data.loc[:, "CONTACT NUMBER"] = existing_data["CONTACT NUMBER"].astype(str).str.replace(',', '')
-        st.dataframe(existing_data)
+        st.dataframe(existing_data,use_container_width=True,hide_index=True)
         st.write("Guests can only view the data.")
 
 # Main Page
