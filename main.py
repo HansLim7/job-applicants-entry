@@ -67,12 +67,12 @@ def fetch_existing_feedback(conn):
     return existing_feedback
 
 # Function to refresh connection with google sheets in case of connection issues
-def refresh():
+def refresh(status):
     conn = st.connection("gsheets", type=GSheetsConnection, ttl=5)
     if conn is None:
         st.write(":red[Failed to establish Google Sheets connection.]")
     else:
-        st.write(":green[Google Sheets connection refreshed successfully.]")
+        st.write(f":green[{status}]")
         time.sleep(1)
         st.rerun()
 
@@ -168,7 +168,7 @@ def show_history_page():
     last_ten_entries = fetch_last_ten_entries(conn, filter_option)
     
     if st.button("Refresh"):
-        st.rerun()
+        refresh("Data Refreshed.")
     st.dataframe(last_ten_entries,use_container_width=True,hide_index=True)
         
 # Fetch existing data
@@ -321,8 +321,7 @@ def edit_data():
                 # Update the original dataset with the edited data
                 update_google_sheet(conn, edited_data)
                 st.success("Data updated successfully!")
-                time.sleep(3)
-                st.rerun()
+                refresh("Data updated.")
         with col2:
             if st.button("Finished Editing",key="finishedit", help="Close the editor."):
                 st.write(':violet[Closing Editor]')
@@ -347,7 +346,7 @@ def main_content():
             # Refresh connection button
             refresh_button = st.button(label="Refresh Connection to Google Sheets", type="secondary", help="Refresh if there are problems connecting to Google Sheets or connection is closed.", key="refresh_button")
             if refresh_button:
-                refresh()
+                refresh("Connection refreshed.")
                     
             # Refresh web application button
             ref_button = st.button(label="Refresh Web Application", help="Refresh the web application to update data")
@@ -416,6 +415,7 @@ def main_content():
                         updated_df = pd.concat([existing_data, new_applicant_df], ignore_index=True)
                         update_google_sheet(conn, updated_df)
                         st.success("Data Successfully Submitted.")
+                        refresh("Data updated.")
 
         # Search tab
         with tab2:
