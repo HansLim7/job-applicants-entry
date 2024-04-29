@@ -357,12 +357,14 @@ def main_content():
             st.link_button(label="Open Google Sheet", help="Open the Google Sheet", type="primary", url="https://docs.google.com/spreadsheets/d/1hmxu-9cIt3X8IP3OhhZRjJt_NHHqQSzjwqcEOvLadHw")
             st.link_button(label="Documentation", help="Open Documentation", type="primary", url="https://docs.google.com/document/d/1z7xYV0r2Q0subw_HNILCXDTKl_uNttK3Nztw3ttJkd8/edit?usp=sharing")
     # Logout button
-    logout_button = st.button(label="**Log out**", type='primary')
-    if logout_button:
-        st.write("Logging Out...")
-        del st.session_state["user"]
-        time.sleep(1)
-        st.rerun()
+    with st.popover("Log Out"):
+        st.write("Are you sure?")
+        logout_button = st.button(label="**Log out**", type='primary')
+        if logout_button:
+            st.write("Logging Out...")
+            del st.session_state["user"]
+            time.sleep(1)
+            st.rerun()
     conn = st.connection("gsheets", type=GSheetsConnection, ttl=5)  # Connect to google sheets
     if conn is None:
         st.markdown("**:red[Cannot connect to the Google Sheet.]**")
