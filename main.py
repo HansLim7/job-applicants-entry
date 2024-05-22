@@ -176,7 +176,7 @@ def fetch_existing_data(conn):
     # Define the column names to retrieve from Google Sheets
     columns = ["DATE", "DATE SUBMITTED", "NAME", "CONTACT NUMBER", "DESIRED POSITION", 
                "FORWARDED FROM", "ADDRESS", "EDUCATIONAL ATTAINMENT", "CSC ELIGIBILITY", 
-               "AGE", "GENDER", "CURRENT POSITION"]
+               "AGE", "GENDER", "CURRENT POSITION","TRAINING","EXPERIENCE"]
 
     # Fetch data from Google Sheets with specified columns
     existing_data = conn.read(worksheet="Applicants", usecols=columns, ttl=5)
@@ -208,7 +208,8 @@ def parse_date(date_str):
                         
 # Arrage the new data into a dataframe
 def create_applicant_dataframe(date, date_submitted, name, contact_number, desired_position, forwarded_from,
-                               address, educational_attainment, csc_eligibility, birthday_or_age, gender, current_pos, online_submission):
+                               address, educational_attainment, csc_eligibility, birthday_or_age, gender,
+                               current_pos, online_submission, training, experience):
     # Determine if the input is a valid date string in the format "MM/DD/YYYY"
     birthday = parse_date(birthday_or_age)
     if birthday:  # If it's a valid date string, calculate age
@@ -235,7 +236,9 @@ def create_applicant_dataframe(date, date_submitted, name, contact_number, desir
         "CSC ELIGIBILITY": [csc_eligibility],
         "AGE": [age],
         "GENDER": [gender],
-        "CURRENT POSITION": [current_pos]
+        "CURRENT POSITION": [current_pos],
+        "TRAINING":[training],
+        "EXPERIENCE":[experience]
     }
     return pd.DataFrame(applicant_data)
 
@@ -392,14 +395,16 @@ def main_content():
                     address = st.text_input(label="Address")
                     birthday_or_age = st.text_input(label="Date of Birth or Age", help="Enter Birthday in MM/DD/YYYY format or Age directly", placeholder="Enter date of birth (mm/dd/yyy) or age")
                     gender = st.selectbox(label="Gender", options=["MALE", "FEMALE", "OTHER"], index=None, placeholder="Select Gender")
-                    current_pos = st.text_input(label="Current Position", help="leave blank if N/A")
-                
+                    training = st.text_area(label="Training", help="Indicate training undergone by the applicant, leave blank if N/A")
+                    experience = st.text_area(label="Experience", help="Applicant's work experience, leave blank if N/A")
+                    
                 with col2: # Right column
                     date_submitted = st.date_input(label="Date Submitted*", help="Select Date Submitted", value=None, format="MM/DD/YYYY")
                     contact_number = st.text_input(label="Contact Number", help="Numeric only", max_chars=11)
                     forwarded_from = st.text_input(label="Forwarded From", help="CHRMO", autocomplete = "CHRMO", value="CHRMO")
                     educational_attainment = st.text_area(label="Educational Attainment")
                     csc_eligibility = st.text_area(label="CSC Eligibility", help="Leave blank if N/A")
+                    current_pos = st.text_input(label="Current Position", help="leave blank if N/A")
 
                 st.divider()
                 # Submit data button    
@@ -412,7 +417,8 @@ def main_content():
                         new_applicant_df = create_applicant_dataframe(date, date_submitted, name, contact_number,
                                                                     desired_position, forwarded_from, address,
                                                                     educational_attainment, csc_eligibility,
-                                                                    birthday_or_age, gender, current_pos, online_submission)
+                                                                    birthday_or_age, gender, current_pos, online_submission,
+                                                                    training, experience)
                         # Append the data to the google sheet
                         updated_df = pd.concat([existing_data, new_applicant_df], ignore_index=True)
                         update_google_sheet(conn, updated_df)
@@ -450,7 +456,7 @@ def main_content():
                         # Create a copy of the DataFrame before modifying it
                         search_results_date = search_results_date.copy()
                         # Remove the last two columns
-                        search_results_date = search_results_date.iloc[:, :-3]
+                        search_results_date = search_results_date.iloc[:, :-5]
                         # Add a new column for REMARKS with default value
                         search_results_date["REMARKS"] = ""
                         # Convert 'CONTACT NUMBER' column to string and then replace commas
@@ -470,9 +476,8 @@ def main_content():
                         st.info(f"No results found for '{search_date.strftime('%m/%d/%Y')}'")
 
             if searchtype == "Date Submitted":  # Search by date submitted
-
-                start_date_submitted = st.date_input("Start Date", key="start_date_sub_input", value=None, format="MM/DD/YYYY")
-                end_date_submitted = st.date_input("End Date", key="end_date_sub_input", value=None, format="MM/DD/YYYY")
+                start_date_submitted = st.date_input("Start Date", key="start_date_sub_input", format="MM/DD/YYYY")
+                end_date_submitted = st.date_input("End Date", key="end_date_sub_input", format="MM/DD/YYYY")
 
                 if start_date_submitted and end_date_submitted:
                     # Convert the start and end dates to datetime objects
@@ -485,19 +490,26 @@ def main_content():
                     # Remove any rows with missing dates
                     existing_data.dropna(subset=['DATE SUBMITTED'], inplace=True)
 
+                    # Filter data within the date range
                     search_results_datesub = existing_data[(existing_data['DATE SUBMITTED'] >= start_date_datetime) & (existing_data['DATE SUBMITTED'] <= end_date_datetime)]
 
                     if not search_results_datesub.empty:
                         # Create a copy of the DataFrame before modifying it
                         search_results_datesub = search_results_datesub.copy()
+
                         # Convert 'CONTACT NUMBER' column to string and then replace commas
-                        search_results_datesub.loc[:, "CONTACT NUMBER"] = search_results_datesub["CONTACT NUMBER"].astype(str).str.replace(',', '')
+                        search_results_datesub['CONTACT NUMBER'] = search_results_datesub['CONTACT NUMBER'].astype(str).str.replace(',', '')
+
+                        # Format the 'DATE SUBMITTED' column to only show the date
+                        search_results_datesub['DATE SUBMITTED'] = search_results_datesub['DATE SUBMITTED'].dt.strftime('%m/%d/%Y')
+
                         # Add a new column for row numbering
                         search_results_datesub.insert(0, ' ', range(1, len(search_results_datesub) + 1))
-                        st.subheader(f"Search Results for Date Submitted between '{start_date_submitted.strftime('%m/%d/%Y')}' and '{end_date_submitted.strftime('%m/%d/%Y')}'")
-                        st.dataframe(search_results_datesub,use_container_width=True,hide_index=True)
 
-                        # Download button
+                        st.subheader(f"Search Results for Date Submitted between '{start_date_submitted.strftime('%m/%d/%Y')}' and '{end_date_submitted.strftime('%m/%d/%Y')}'")
+                        st.dataframe(search_results_datesub, use_container_width=True, hide_index=True)
+
+                        # Prepare CSV download
                         csv = search_results_datesub.to_csv(index=False)
                         b64 = base64.b64encode(csv.encode()).decode()
                         file_name = f"date_submitted_{start_date_submitted.strftime('%m-%d-%Y')}_to_{end_date_submitted.strftime('%m-%d-%Y')}.csv"
